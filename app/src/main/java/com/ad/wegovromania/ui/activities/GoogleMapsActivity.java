@@ -28,7 +28,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -241,6 +240,7 @@ public class GoogleMapsActivity extends AppCompatActivity
 
                         Report report = new Report(geoPoint, document.getString("type"), document.getString("city"), document.getString("reportBody"), mAuth.getCurrentUser().getUid());
                         report.setTimestamp(document.getDate("timestamp"));
+                        report.setImages((ArrayList<String>)document.get("images"));
                         marker.setTag(report);
                     }
                 } else {
