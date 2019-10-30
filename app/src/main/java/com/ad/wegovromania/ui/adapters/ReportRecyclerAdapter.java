@@ -114,26 +114,4 @@ public class ReportRecyclerAdapter extends RecyclerView.Adapter<ReportRecyclerAd
         mReports = reports;
         notifyDataSetChanged();
     }
-
-    public void openImage(Context context, ImageView imageView) {
-        final AlertDialog.Builder builder =
-                new AlertDialog.Builder(context).
-                        setMessage("Message above the image").
-                        setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-
-        if (imageView.getParent() == null) {
-            builder.setView(imageView);
-        } else {
-            ((ViewGroup)imageView.getParent()).removeView(imageView);
-            // now initialized yourView and its component again
-            builder.setView(imageView);
-        }
-
-        builder.create().show();
-    }
 }

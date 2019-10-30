@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,6 +19,7 @@ import androidx.core.content.ContextCompat;
 
 import com.ad.wegovromania.R;
 import com.ad.wegovromania.models.Report;
+import com.ad.wegovromania.ui.adapters.CustomInfoWindowAdapter;
 import com.ad.wegovromania.util.Constants;
 import com.ad.wegovromania.util.Utils;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -26,6 +28,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -33,6 +36,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -46,12 +50,15 @@ public class GoogleMapsActivity extends AppCompatActivity
         GoogleMap.OnMyLocationClickListener,
         OnMapReadyCallback {
 
+    private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
 
     private FusedLocationProviderClient mFusedLocationClient;
     private LatLng mLocation;
+    private Marker mSelector;
 
     private GoogleMap mMap;
+    private ImageView mCenterMarker;
     private Button mSubmitButton;
 
     private List<Report> mReports;
@@ -71,8 +78,10 @@ public class GoogleMapsActivity extends AppCompatActivity
             mapFragment.getMapAsync(this);
         }
 
+        mAuth = FirebaseAuth.getInstance();
         mFirestore = FirebaseFirestore.getInstance();
 
+        mCenterMarker = findViewById(R.id.map_pin);
         mSubmitButton = findViewById(R.id.submitButton);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -87,7 +96,7 @@ public class GoogleMapsActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 // Get the city clicked on
-                List<Address> addresses = Utils.getAdresses(mLocation,GoogleMapsActivity.this);
+                List<Address> addresses = Utils.getAdresses(mLocation, GoogleMapsActivity.this);
                 String countryName = null;
                 String cityName = null;
                 if (addresses != null) {
@@ -163,11 +172,28 @@ public class GoogleMapsActivity extends AppCompatActivity
         enableLocation();
         centerCameraOnUser();
 
-        // Get marker coordinates
+        // Add center marker
+        mSelector = mMap.addMarker(new MarkerOptions()
+                .position(mMap.getCameraPosition().target).icon(Utils.toBitmap(GoogleMapsActivity.this, R.drawable.ic_pin))
+                .draggable(true));
+
+        // Hide center marker when moving
+        mMap.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
+            @Override
+            public void onCameraMoveStarted(int i) {
+                mCenterMarker.setVisibility(View.VISIBLE);
+                mSelector.setVisible(false);
+            }
+        });
+
+        // Get center coordinates
         mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
             @Override
             public void onCameraIdle() {
                 mLocation = mMap.getCameraPosition().target;
+                mSelector.setVisible(true);
+                mSelector.setPosition(mMap.getCameraPosition().target);
+                mCenterMarker.setVisibility(View.INVISIBLE);
             }
         });
     }
@@ -209,7 +235,13 @@ public class GoogleMapsActivity extends AppCompatActivity
                         Marker marker = mMap.addMarker(new MarkerOptions()
                                 .position(mLocation)
                                 .title("Sesizare"));
-                        marker.showInfoWindow();
+
+                        CustomInfoWindowAdapter customInfoWindowAdapter = new CustomInfoWindowAdapter(GoogleMapsActivity.this);
+                        mMap.setInfoWindowAdapter(customInfoWindowAdapter);
+
+                        Report report = new Report(geoPoint, document.getString("type"), document.getString("city"), document.getString("reportBody"), mAuth.getCurrentUser().getUid());
+                        report.setTimestamp(document.getDate("timestamp"));
+                        marker.setTag(report);
                     }
                 } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());
