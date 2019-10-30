@@ -1,3 +1,70 @@
 <resources>
+    <!--    API-->
+    <string name="google_maps_api_key">AIzaSyDOs-0ajGU0WvaVtrEs6vu1nsoaY8gbm48</string>
+
+    <!--    General-->
     <string name="app_name">We Gov Romania</string>
+    <string name="yes">Da</string>
+    <string name="no">Nu</string>
+    <string name="save">Salvare</string>
+    <string name="submit">Trimiteți</string>
+
+    <!--    Toolbar-->
+    <string name="add_report">Sesizare nouă</string>
+    <string name="reports">Sesizări</string>
+    <string name="active_reports">Trimise</string>
+    <string name="solved_reports">Rezolvate</string>
+    <string name="account_settings">Setări</string>
+    <string name="logout">Deconectați-vă</string>
+
+    <!--    Login / Register -->
+    <string name="user_email">E-mail</string>
+    <string name="user_password">Parolă</string>
+    <string name="confirm_password">Confirmați parola</string>
+    <string name="remember_me">Ține-mă minte</string>
+    <string name="login">Intrați în cont</string>
+    <string name="register_redirect">Nu aveți cont încă? Creați-vă unul</string>
+    <string name="register">Înregistrare</string>
+    <string name="login_redirect">Aveți deja cont? Intrați aici</string>
+    <string name="email_required_error">Completați adresa de e-mail</string>
+    <string name="password_required_error">Completați parola</string>
+    <string name="email_format_error">Adresa de e-mail nu este validă</string>
+    <string name="password_confirmation_required_error">Confirmați parola</string>
+    <string name="password_not_matching_error">Parolele nu se potrivesc</string>
+    <string name="email_in_use_error">Adresa de e-mail este deja utilizată</string>
+    <string name="password_weak_error">Parola trebuie să aibă cel puțin 6 caractere</string>
+    <string name="authentication_failed">Autentificare nereușită</string>
+    <string name="registration_failed">Înregistrare nereușită</string>
+
+    <!--    Account Settings-->
+    <string name="user_first_name">Nume</string>
+    <string name="user_last_name">Prenume</string>
+    <string name="user_phone">Telefon</string>
+    <string name="first_name_required_error">Completați numele</string>
+    <string name="last_name_required_error">Completați prenumele</string>
+    <string name="phone_required_error">Completați numărul de telefon</string>
+    <string name="email_unavailable_error">Adresa de e-mail nu există</string>
+    <string name="wrong_password_error">Parolă incorectă</string>
+    <string name="delete_account">Ștergere cont</string>
+    <string name="delete_account_message_title">Doriți să vă ștergeți contul?</string>
+    <string name="delete_account_message">Acțiunea nu poate fi anulată.</string>
+    <string name="update_failed">Modificare nereușită</string>
+
+    <!--    Add report-->
+    <string name="add_location">Alegeți locația</string>
+    <string name="change_location">Modificați locația</string>
+    <string name="report_body">Conținutul sesizării</string>
+    <string name="report_body_required_error">Completați conținutul sesizării</string>
+    <string name="type_not_selected_error">Nu ați selectat tipul sesizării</string>
+    <string name="location_not_selected">Nu ați selectat locația</string>
+    <string name="images_not_selected">Nu ați selectat nicio imagine.</string>
+    <string name="report_sent">Sesizarea Dvs. a fost transmisă.</string>
+
+    <!--    Google Maps -->
+    <string name="out_of_country_bounds">Locația aleasă nu aparține României.</string>
+    <string name="location_selection_failed">Selectare nereușită. Încercați din nou.</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

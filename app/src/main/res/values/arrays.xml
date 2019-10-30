@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="report_type_array">
+        <item>Tipul sesizării</item>
+        <item>Taxe și impozite</item>
+        <item>Parcări neregulamentare</item>
+        <item>Spații verzi</item>
+        <item>Străzi</item>
+        <item>Salubritate</item>
+        <item>Lucrări neautorizate</item>
+        <item>Parcuri</item>
+        <item>Altele</item>
+    </string-array>
+</resources>
