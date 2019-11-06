@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "62132002633",
+    "firebase_url": "https://wegovromania.firebaseio.com",
+    "project_id": "wegovromania",
+    "storage_bucket": "wegovromania.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:62132002633:android:77d7f7b6a13e74bae44498",
+        "android_client_info": {
+          "package_name": "com.ad.wegovromania"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "62132002633-h375663221pub8o9d1igpqisuc4eb0j7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ad.wegovromania",
+            "certificate_hash": "1f3ffc3c46ced6ee35a78bc28869b2820d570eda"
+          }
+        },
+        {
+          "client_id": "62132002633-vbub43021rj8vl2dlsm3gasp3cnstkbg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdgDTRYSmtZTZSkLjreeWUVYC_FKkW9CY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "62132002633-vbub43021rj8vl2dlsm3gasp3cnstkbg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

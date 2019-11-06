@@ -101,6 +101,7 @@ public class GoogleMapsActivity extends AppCompatActivity
                 if (addresses != null) {
                     countryName = addresses.get(0).getCountryName();
                     cityName = addresses.get(0).getLocality();
+
                 } else {
                     Toast.makeText(GoogleMapsActivity.this, getString(R.string.location_selection_failed), Toast.LENGTH_SHORT).show();
                 }
