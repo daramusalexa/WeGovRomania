@@ -17,6 +17,10 @@
     <string name="account_settings">Setări</string>
     <string name="logout">Deconectați-vă</string>
 
+    <!--    Account Type-->
+    <string name="citizen">Cetățean</string>
+    <string name="cityHall">Primărie</string>
+
     <!--    Login / Register -->
     <string name="user_email">E-mail</string>
     <string name="user_password">Parolă</string>
@@ -55,6 +59,7 @@
     <string name="change_location">Modificați locația</string>
     <string name="report_body">Conținutul sesizării</string>
     <string name="report_body_required_error">Completați conținutul sesizării</string>
+    <string name="report_body_length_error">Nu poate depăși 200 de caractere</string>
     <string name="type_not_selected_error">Nu ați selectat tipul sesizării</string>
     <string name="location_not_selected">Nu ați selectat locația</string>
     <string name="images_not_selected">Nu ați selectat nicio imagine.</string>
@@ -63,8 +68,5 @@
     <!--    Google Maps -->
     <string name="out_of_country_bounds">Locația aleasă nu aparține României.</string>
     <string name="location_selection_failed">Selectare nereușită. Încercați din nou.</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

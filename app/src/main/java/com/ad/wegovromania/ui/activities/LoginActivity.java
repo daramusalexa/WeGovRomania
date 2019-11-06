@@ -137,7 +137,7 @@ public class LoginActivity extends AppCompatActivity {
         mRegisterRedirectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
+                Intent intent = new Intent(getApplicationContext(), AccountTypeActivity.class);
                 startActivity(intent);
             }
         });

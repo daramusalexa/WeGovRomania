@@ -1,7 +1,9 @@
 package com.ad.wegovromania.ui.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
@@ -33,6 +35,8 @@ public class RegisterActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
 
+    private SharedPreferences mPreferences;
+
     private ProgressBar mProgressBar;
     private TextInputLayout mFirstNameTextInputLayout;
     private EditText mFirstNameEditText;
@@ -58,6 +62,8 @@ public class RegisterActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         mFirestore = FirebaseFirestore.getInstance();
+
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         mProgressBar = findViewById(R.id.progressBar);
         mFirstNameTextInputLayout = findViewById(R.id.firstNameTextInputLayout);
@@ -132,6 +138,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     if (task.isSuccessful()) {
                                         // Add user to database
                                         addUser(firstName, lastName, phone);
+                                        setLoginCredentials(email, password);
                                     } else {
                                         try {
                                             throw task.getException();
@@ -199,5 +206,11 @@ public class RegisterActivity extends AppCompatActivity {
         // Start Main Activity
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
+    }
+
+    // Uses shared preferences to remember user login info
+    public void setLoginCredentials(String email, String password) {
+        mPreferences.edit().putString(getString(R.string.user_email), email).apply();
+        mPreferences.edit().putString(getString(R.string.user_password), password).apply();
     }
 }

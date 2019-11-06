@@ -17,7 +17,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.activities.RegisterActivity"></activity>
+        <activity android:name=".ui.activities.AccountTypeActivity"></activity>
+        <activity android:name=".ui.activities.RegisterActivity" />
         <activity android:name=".ui.activities.ImageActivity" />
         <activity android:name=".ui.activities.GoogleMapsActivity" />
         <activity android:name=".ui.activities.LoginActivity" />

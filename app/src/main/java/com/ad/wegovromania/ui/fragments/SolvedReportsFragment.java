@@ -3,13 +3,31 @@ package com.ad.wegovromania.ui.fragments;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.ad.wegovromania.R;
+import com.ad.wegovromania.models.Report;
+import com.ad.wegovromania.ui.adapters.ReportRecyclerAdapter;
+import com.ad.wegovromania.util.Constants;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,6 +48,17 @@ public class SolvedReportsFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore mFirestore;
+
+    private ProgressBar mProgressBar;
+    private RecyclerView mRecyclerView;
+
+    private ReportRecyclerAdapter mReportRecyclerAdapter;
+    private List<Report> mReports;
+
+    private static final String TAG = "SolvedReports Frag.";
 
     public SolvedReportsFragment() {
         // Required empty public constructor
@@ -60,13 +89,34 @@ public class SolvedReportsFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        mAuth = FirebaseAuth.getInstance();
+        mFirestore = FirebaseFirestore.getInstance();
+
+        mReports = new ArrayList<>();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_solved_reports, container, false);
+        View view = inflater.inflate(R.layout.fragment_active_reports, container, false);
+
+
+        mProgressBar = view.findViewById(R.id.progressBar);
+        mRecyclerView = view.findViewById(R.id.recyclerView);
+
+        mProgressBar.setVisibility(View.VISIBLE);
+
+        mRecyclerView.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(container.getContext());
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mReportRecyclerAdapter = new ReportRecyclerAdapter(mReports);
+        mRecyclerView.setLayoutManager(linearLayoutManager);
+        mRecyclerView.setAdapter(mReportRecyclerAdapter);
+
+        // Inflate the layout for this fragment
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -74,6 +124,12 @@ public class SolvedReportsFragment extends Fragment {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        loadReports();
     }
 
     @Override
@@ -106,5 +162,28 @@ public class SolvedReportsFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    // Load reports from Firestore
+    public void loadReports() {
+        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+        mFirestore.collection("Reports").whereEqualTo("userId", firebaseUser.getUid()).whereEqualTo("status", Constants.Status.Solved).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                if (task.isSuccessful()) {
+                    // Load reports
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        mReports = task.getResult().toObjects(Report.class);
+                    }
+                    mReportRecyclerAdapter.updateReports(mReports);
+                    mProgressBar.setVisibility(View.INVISIBLE);
+                } else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
+                }
+
+                Log.e(TAG, mReports.toString());
+            }
+        });
     }
 }

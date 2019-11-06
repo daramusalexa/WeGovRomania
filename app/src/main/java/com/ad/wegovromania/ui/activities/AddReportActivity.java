@@ -172,7 +172,11 @@ public class AddReportActivity extends AppCompatActivity implements AdapterView.
                 } else if (TextUtils.isEmpty(requestBody)) {
                     mReportBodyInputLayout.setError(getString(R.string.report_body_required_error));
                     mReportBodyEditText.requestFocus();
+                } else if (requestBody.length() > 200) {
+                    mReportBodyInputLayout.setError(getString(R.string.report_body_length_error));
+                    mReportBodyEditText.requestFocus();
                 } else {
+
                     mProgressBar.setVisibility(View.VISIBLE);
 
                     // Create GeoPoint for location
