@@ -19,9 +19,11 @@ import com.ad.wegovromania.models.Report;
 import com.ad.wegovromania.ui.adapters.ReportRecyclerAdapter;
 import com.ad.wegovromania.util.Constants;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -51,12 +53,15 @@ public class SolvedReportsFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
+    private FirebaseUser mFirebaseUser;
 
     private ProgressBar mProgressBar;
     private RecyclerView mRecyclerView;
 
     private ReportRecyclerAdapter mReportRecyclerAdapter;
     private List<Report> mReports;
+
+    private static String mCity = null;
 
     private static final String TAG = "SolvedReports Frag.";
 
@@ -102,6 +107,7 @@ public class SolvedReportsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_active_reports, container, false);
 
+        mFirebaseUser = mAuth.getCurrentUser();
 
         mProgressBar = view.findViewById(R.id.progressBar);
         mRecyclerView = view.findViewById(R.id.recyclerView);
@@ -164,26 +170,61 @@ public class SolvedReportsFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    // Load reports from Firestore
-    public void loadReports() {
-        FirebaseUser firebaseUser = mAuth.getCurrentUser();
-        mFirestore.collection("Reports").whereEqualTo("userId", firebaseUser.getUid()).whereEqualTo("status", Constants.Status.Solved).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+    // Set User City before loading reports
+    public void setUserCity() {
+        // Get user info from database
+        mFirestore.collection("Users").document(mFirebaseUser.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-
-                if (task.isSuccessful()) {
-                    // Load reports
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        mReports = task.getResult().toObjects(Report.class);
-                    }
-                    mReportRecyclerAdapter.updateReports(mReports);
-                    mProgressBar.setVisibility(View.INVISIBLE);
-                } else {
-                    Log.d(TAG, "Error getting documents: ", task.getException());
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot != null) {
+                    mCity = documentSnapshot.getString("city");
+                    loadReports();
                 }
-
-                Log.e(TAG, mReports.toString());
             }
         });
+    }
+
+    // Load reports from Firestore
+    public void loadReports() {
+        mFirebaseUser = mAuth.getCurrentUser();
+        if(mCity == null) {
+            mFirestore.collection("Reports").whereEqualTo("userId", mFirebaseUser.getUid()).whereEqualTo("status", Constants.Status.Solved).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                    if (task.isSuccessful()) {
+                        // Load reports
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            mReports = task.getResult().toObjects(Report.class);
+                        }
+                        mReportRecyclerAdapter.updateReports(mReports);
+                        mProgressBar.setVisibility(View.INVISIBLE);
+                    } else {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
+                    }
+
+                    Log.e(TAG, mReports.toString());
+                }
+            });
+        } else {
+            mFirestore.collection("Reports").whereEqualTo("city", mCity).whereEqualTo("status", Constants.Status.Solved).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                    if (task.isSuccessful()) {
+                        // Load reports
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            mReports = task.getResult().toObjects(Report.class);
+                        }
+                        mReportRecyclerAdapter.updateReports(mReports);
+                        mProgressBar.setVisibility(View.INVISIBLE);
+                    } else {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
+                    }
+
+                    Log.e(TAG, mReports.toString());
+                }
+            });
+        }
     }
 }
