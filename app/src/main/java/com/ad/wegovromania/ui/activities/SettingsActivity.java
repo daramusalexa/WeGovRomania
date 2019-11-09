@@ -22,7 +22,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.ad.wegovromania.R;
+import com.ad.wegovromania.models.CityUser;
 import com.ad.wegovromania.models.User;
+import com.ad.wegovromania.util.Utils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -54,9 +56,12 @@ public class SettingsActivity extends AppCompatActivity {
     private EditText mPhoneEditText;
     private TextInputLayout mEmailTextInputLayout;
     private EditText mEmailEditText;
+    private TextInputLayout mCityTextInputLayout;
+    private EditText mCityEditText;
     private Button mSaveButton;
     private Button mDeleteButton;
 
+    private static String mCity = null;
 
     private static final String TAG = "Account Activity";
 
@@ -88,8 +93,13 @@ public class SettingsActivity extends AppCompatActivity {
         mPhoneEditText = findViewById(R.id.phoneEditText);
         mEmailTextInputLayout = findViewById(R.id.emailTextInputLayout);
         mEmailEditText = findViewById(R.id.emailEditText);
+        mCityTextInputLayout = findViewById(R.id.cityTextInputLayout);
+        mCityEditText = findViewById(R.id.cityEditText);
         mSaveButton = findViewById(R.id.saveButton);
         mDeleteButton = findViewById(R.id.deleteButton);
+
+        // Set user city from Firestore
+        setUserCity();
 
         fillForm();
 
@@ -102,12 +112,14 @@ public class SettingsActivity extends AppCompatActivity {
                 final String lastName = mLastNameEditText.getText().toString().trim();
                 final String phone = mPhoneEditText.getText().toString().trim();
                 final String email = mEmailEditText.getText().toString().trim();
+                final String city = mCityEditText.getText().toString().trim();
 
                 // Clear errors
                 mFirstNameTextInputLayout.setError(null);
                 mLastNameTextInputLayout.setError(null);
                 mPhoneTextInputLayout.setError(null);
                 mEmailTextInputLayout.setError(null);
+                mCityTextInputLayout.setError(null);
 
                 // Check user input
                 if (TextUtils.isEmpty(firstName)) {
@@ -128,11 +140,14 @@ public class SettingsActivity extends AppCompatActivity {
                 } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                     mEmailTextInputLayout.setError(getString(R.string.email_format_error));
                     mEmailEditText.requestFocus();
+                } else if (mCity != null && TextUtils.isEmpty(city)) {
+                    mCityTextInputLayout.setError(getString(R.string.city_required_error));
+                    mCityEditText.requestFocus();
                 } else {
                     mProgressBar.setVisibility(View.VISIBLE);
 
                     // Change user info in database
-                    modifyUser(firstName, lastName, phone, email);
+                    modifyUser(firstName, lastName, phone, email, city);
                 }
             }
         });
@@ -186,6 +201,23 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
+    public void setUserCity() {
+        // Get user info from database
+        mFirestore.collection("Users").document(mFirebaseUser.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot != null) {
+                    mCity = documentSnapshot.getString("city");
+                    // If city user show city field
+                    if(mCity != null) {
+                        mCityTextInputLayout.setVisibility(View.VISIBLE);
+                        mCityEditText.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        });
+    }
+
     // Get user data and fill form
     public void fillForm() {
         // Get user info from database
@@ -197,6 +229,9 @@ public class SettingsActivity extends AppCompatActivity {
                     mFirstNameEditText.setText(documentSnapshot.getString("firstName"));
                     mLastNameEditText.setText(documentSnapshot.getString("lastName"));
                     mPhoneEditText.setText(documentSnapshot.getString("phone"));
+                    if(mCity != null) {
+                        mCityEditText.setText(documentSnapshot.getString("city"));
+                    }
                 }
 
                 mProgressBar.setVisibility(View.INVISIBLE);
@@ -206,13 +241,17 @@ public class SettingsActivity extends AppCompatActivity {
 
         // Get email from Authentication
         mEmailEditText.setText(mFirebaseUser.getEmail());
-
     }
 
     // Update user in Authentication / Firestore
-    public void modifyUser(final String firstName, final String lastName, final String phone, final String email) {
+    public void modifyUser(final String firstName, final String lastName, final String phone, final String email, final String city) {
         // Create new user object
-        User user = new User(firstName, lastName, phone);
+        User user;
+        if(mCity == null) {
+            user = new User(firstName, lastName, phone);
+        } else {
+            user = new CityUser(firstName, lastName, phone, city);
+        }
 
         // Update user in the Users collection
         if (mFirebaseUser != null) {

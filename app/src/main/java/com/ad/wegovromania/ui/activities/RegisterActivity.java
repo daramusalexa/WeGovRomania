@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.ad.wegovromania.R;
+import com.ad.wegovromania.models.CityUser;
 import com.ad.wegovromania.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -46,6 +47,8 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText mPhoneEditText;
     private TextInputLayout mEmailTextInputLayout;
     private EditText mEmailEditText;
+    private TextInputLayout mCityTextInputLayout;
+    private EditText mCityEditText;
     private TextInputLayout mPasswordTextInputLayout;
     private EditText mPasswordEditText;
     private TextInputLayout mConfirmPasswordTextInputLayout;
@@ -53,12 +56,20 @@ public class RegisterActivity extends AppCompatActivity {
     private Button mRegisterButton;
     private Button mLoginRedirectButton;
 
+    private boolean mIsCity = false;
+
     private static final String TAG = "Register Activity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        // Check if user selected city account type
+        Intent intent = getIntent();
+        if(intent.getStringExtra("ACCOUNT_TYPE").equals("CITY")) {
+            mIsCity = true;
+        }
 
         mAuth = FirebaseAuth.getInstance();
         mFirestore = FirebaseFirestore.getInstance();
@@ -74,12 +85,20 @@ public class RegisterActivity extends AppCompatActivity {
         mPhoneEditText = findViewById(R.id.phoneEditText);
         mEmailTextInputLayout = findViewById(R.id.emailTextInputLayout);
         mEmailEditText = findViewById(R.id.emailEditText);
+        mCityTextInputLayout = findViewById(R.id.cityTextInputLayout);
+        mCityEditText = findViewById(R.id.cityEditText);
         mPasswordTextInputLayout = findViewById(R.id.passwordTextInputLayout);
         mPasswordEditText = findViewById(R.id.passwordEditText);
         mConfirmPasswordTextInputLayout = findViewById(R.id.confirmPasswordTextInputLayout);
         mConfirmPasswordEditText = findViewById(R.id.confirmPasswordEditText);
         mRegisterButton = findViewById(R.id.registerButton);
         mLoginRedirectButton = findViewById(R.id.loginRedirectButton);
+
+        // If city user show city field
+        if(mIsCity) {
+            mCityTextInputLayout.setVisibility(View.VISIBLE);
+            mCityEditText.setVisibility(View.VISIBLE);
+        }
 
         // When the user clicks the Register button
         mRegisterButton.setOnClickListener(new View.OnClickListener() {
@@ -90,6 +109,7 @@ public class RegisterActivity extends AppCompatActivity {
                 final String lastName = mLastNameEditText.getText().toString().trim();
                 final String phone = mPhoneEditText.getText().toString().trim();
                 final String email = mEmailEditText.getText().toString().trim();
+                final String city = mCityEditText.getText().toString().trim();
                 final String password = mPasswordEditText.getText().toString().trim();
                 final String confirmPassword = mConfirmPasswordEditText.getText().toString().trim();
 
@@ -98,6 +118,7 @@ public class RegisterActivity extends AppCompatActivity {
                 mLastNameTextInputLayout.setError(null);
                 mPhoneTextInputLayout.setError(null);
                 mEmailTextInputLayout.setError(null);
+                mCityTextInputLayout.setError(null);
                 mPasswordTextInputLayout.setError(null);
                 mConfirmPasswordTextInputLayout.setError(null);
 
@@ -117,6 +138,9 @@ public class RegisterActivity extends AppCompatActivity {
                 } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                     mEmailTextInputLayout.setError(getString(R.string.email_format_error));
                     mEmailEditText.requestFocus();
+                } else if (mIsCity && TextUtils.isEmpty(city)) {
+                    mCityTextInputLayout.setError(getString(R.string.city_required_error));
+                    mCityEditText.requestFocus();
                 } else if (TextUtils.isEmpty(password)) {
                     mPasswordTextInputLayout.setError(getString(R.string.password_required_error));
                     mPasswordEditText.requestFocus();
@@ -137,7 +161,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     // Sign up success
                                     if (task.isSuccessful()) {
                                         // Add user to database
-                                        addUser(firstName, lastName, phone);
+                                        addUser(firstName, lastName, phone, city);
                                         setLoginCredentials(email, password);
                                     } else {
                                         try {
@@ -179,9 +203,14 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     // Add user to Firestore
-    public void addUser(final String firstName, final String lastName, final String phone) {
+    public void addUser(final String firstName, final String lastName, final String phone, final String city) {
         // Create new user
-        User user = new User(firstName, lastName, phone);
+        User user;
+        if(!mIsCity) {
+            user = new User(firstName, lastName, phone);
+        } else {
+            user = new CityUser(firstName, lastName, phone, city);
+        }
 
         // Add user in the Users collection
         FirebaseUser firebaseUser = mAuth.getCurrentUser();

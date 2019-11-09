@@ -30,6 +30,7 @@
     <string name="register_redirect">Nu aveți cont încă? Creați-vă unul</string>
     <string name="register">Înregistrare</string>
     <string name="login_redirect">Aveți deja cont? Intrați aici</string>
+    <string name="city">Localitate</string>
     <string name="email_required_error">Completați adresa de e-mail</string>
     <string name="password_required_error">Completați parola</string>
     <string name="email_format_error">Adresa de e-mail nu este validă</string>
@@ -37,6 +38,7 @@
     <string name="password_not_matching_error">Parolele nu se potrivesc</string>
     <string name="email_in_use_error">Adresa de e-mail este deja utilizată</string>
     <string name="password_weak_error">Parola trebuie să aibă cel puțin 6 caractere</string>
+    <string name="city_required_error">Completați localitatea</string>
     <string name="authentication_failed">Autentificare nereușită</string>
     <string name="registration_failed">Înregistrare nereușită</string>
 
