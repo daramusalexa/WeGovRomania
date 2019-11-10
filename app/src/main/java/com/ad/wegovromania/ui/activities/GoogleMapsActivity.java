@@ -107,7 +107,7 @@ public class GoogleMapsActivity extends AppCompatActivity
                 }
 
                 // If in city limits send location to Add Report Activity
-                if (countryName.equals(Constants.COUNTRY)) {
+                if (countryName.equals(Constants.COUNTRY[0]) || countryName.equals(Constants.COUNTRY[1])) {
                     Intent intent = new Intent(GoogleMapsActivity.this, AddReportActivity.class);
                     intent.putExtra("LATITUDE", String.valueOf(mLocation.latitude));
                     intent.putExtra("LONGITUDE", String.valueOf(mLocation.longitude));

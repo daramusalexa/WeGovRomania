@@ -7,6 +7,7 @@
     <string name="yes">Da</string>
     <string name="no">Nu</string>
     <string name="save">Salvare</string>
+    <string name="cancel">Anulare</string>
     <string name="submit">Trimiteți</string>
 
     <!--    Toolbar-->
@@ -70,5 +71,8 @@
     <!--    Google Maps -->
     <string name="out_of_country_bounds">Locația aleasă nu aparține României.</string>
     <string name="location_selection_failed">Selectare nereușită. Încercați din nou.</string>
+
+    <!--    Report Details -->
+    <string name="solved">Soluționat</string>
 
 </resources>

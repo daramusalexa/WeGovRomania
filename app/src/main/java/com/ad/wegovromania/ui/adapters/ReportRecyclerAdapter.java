@@ -15,6 +15,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ad.wegovromania.R;
@@ -129,11 +130,6 @@ public class ReportRecyclerAdapter extends RecyclerView.Adapter<ReportRecyclerAd
     public void updateReports(List<Report> reports, List<String> reportIDs) {
         mReports = reports;
         mReportIDs = reportIDs;
-        notifyDataSetChanged();
-    }
-
-    public void updateReports(List<Report> reports) { // TODO
-        mReports = reports;
         notifyDataSetChanged();
     }
 }

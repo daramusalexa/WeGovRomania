@@ -60,6 +60,7 @@ public class SolvedReportsFragment extends Fragment {
 
     private ReportRecyclerAdapter mReportRecyclerAdapter;
     private List<Report> mReports;
+    private List<String> mReportIDs;
 
     private static String mCity = null;
 
@@ -99,6 +100,7 @@ public class SolvedReportsFragment extends Fragment {
         mFirestore = FirebaseFirestore.getInstance();
 
         mReports = new ArrayList<>();
+        mReportIDs = new ArrayList<>();
     }
 
     @Override
@@ -135,7 +137,7 @@ public class SolvedReportsFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        loadReports();
+        setUserCity();
     }
 
     @Override
@@ -196,8 +198,9 @@ public class SolvedReportsFragment extends Fragment {
                         // Load reports
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             mReports = task.getResult().toObjects(Report.class);
+                            mReportIDs.add(document.getId());
                         }
-                        mReportRecyclerAdapter.updateReports(mReports);
+                        mReportRecyclerAdapter.updateReports(mReports, mReportIDs);
                         mProgressBar.setVisibility(View.INVISIBLE);
                     } else {
                         Log.d(TAG, "Error getting documents: ", task.getException());
@@ -215,8 +218,9 @@ public class SolvedReportsFragment extends Fragment {
                         // Load reports
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             mReports = task.getResult().toObjects(Report.class);
+                            mReportIDs.add(document.getId());
                         }
-                        mReportRecyclerAdapter.updateReports(mReports);
+                        mReportRecyclerAdapter.updateReports(mReports, mReportIDs);
                         mProgressBar.setVisibility(View.INVISIBLE);
                     } else {
                         Log.d(TAG, "Error getting documents: ", task.getException());
