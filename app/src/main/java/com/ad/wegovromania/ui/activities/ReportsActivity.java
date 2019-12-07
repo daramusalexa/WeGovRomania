@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,18 +17,27 @@ import androidx.fragment.app.FragmentTransaction;
 import com.ad.wegovromania.R;
 import com.ad.wegovromania.ui.fragments.ActiveReportsFragment;
 import com.ad.wegovromania.ui.fragments.SolvedReportsFragment;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class ReportsActivity extends AppCompatActivity implements ActiveReportsFragment.OnFragmentInteractionListener, SolvedReportsFragment.OnFragmentInteractionListener {
 
     private FirebaseAuth mAuth;
+    private FirebaseFirestore mFirestore;
+    private FirebaseUser mFirebaseUser;
 
     private Toolbar mToolbar;
+    private Button mAddReportButton;
     private BottomNavigationView bottomNavigationView;
 
     private ActiveReportsFragment activeRequestsFragment;
     private SolvedReportsFragment solvedRequestsFragment;
+
+    private static String mCity = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,18 +45,31 @@ public class ReportsActivity extends AppCompatActivity implements ActiveReportsF
         setContentView(R.layout.activity_reports);
 
         mAuth = FirebaseAuth.getInstance();
+        mFirestore = FirebaseFirestore.getInstance();
+        mFirebaseUser = mAuth.getCurrentUser();
 
         mToolbar = findViewById(R.id.toolbar);
+        mAddReportButton = findViewById(R.id.addReportButton);
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
         activeRequestsFragment = new ActiveReportsFragment();
         solvedRequestsFragment = new SolvedReportsFragment();
+
 
         // Configure Toolbar
         setSupportActionBar(mToolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(getString(R.string.reports));
         }
+
+        // When user clicks the Add Report Button
+        mAddReportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), AddReportActivity.class);
+                startActivity(intent);
+            }
+        });
 
         // Set main fragment
         setFragment(activeRequestsFragment);
@@ -80,12 +104,6 @@ public class ReportsActivity extends AppCompatActivity implements ActiveReportsF
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         Intent intent;
         switch(item.getItemId()) {
-            // Start the Add Report Activity
-            case R.id.addReportButton:
-                intent = new Intent(this, AddReportActivity.class);
-                startActivity(intent);
-                return true;
-            // Start the Account Activity
             case R.id.settingsButton:
                 intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
@@ -110,6 +128,22 @@ public class ReportsActivity extends AppCompatActivity implements ActiveReportsF
     @Override
     public void onFragmentInteraction(Uri uri) {
         //you can leave it empty
+    }
+
+    // If user city is not null show Add Report Button
+    public void setUserCity(final Menu menu) {
+        // Get user info from database
+        mFirestore.collection("Users").document(mFirebaseUser.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot != null) {
+                    mCity = documentSnapshot.getString("city");
+                    if(mCity != null) {
+                        mAddReportButton.setVisibility(View.INVISIBLE);
+                    }
+                }
+            }
+        });
     }
 
 }

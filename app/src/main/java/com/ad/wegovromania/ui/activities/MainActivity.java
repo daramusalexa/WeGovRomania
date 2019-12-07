@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Toolbar mToolbar;
     private Button mReportsButton;
+    private Button mAddReportButton;
 
     private static String mCity = null;
 
@@ -41,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
 
         mToolbar = findViewById(R.id.toolbar);
         mReportsButton = findViewById(R.id.reportsButton);
+        mAddReportButton = findViewById(R.id.addReportButton);
+
 
         // Configure Toolbar
         setSupportActionBar(mToolbar);
@@ -56,6 +59,15 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        // When user clicks the Add Report Button
+        mAddReportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), AddReportActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -66,8 +78,6 @@ public class MainActivity extends AppCompatActivity {
         if(currentUser == null) {
             sendToLogin();
         }
-
-
     }
 
     // Inflate toolbar menu
@@ -85,11 +95,6 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         Intent intent;
         switch(item.getItemId()) {
-            // Start the Add Report Activity
-            case R.id.addReportButton:
-                intent = new Intent(this, AddReportActivity.class);
-                startActivity(intent);
-                return true;
             // Start the Account Activity
             case R.id.settingsButton:
                 intent = new Intent(this, SettingsActivity.class);
@@ -111,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    // If user city is null show Add Report Button
+    // If user city is not null show Add Report Button
     public void setUserCity(final Menu menu) {
         // Get user info from database
         mFirestore.collection("Users").document(mFirebaseUser.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -119,9 +124,8 @@ public class MainActivity extends AppCompatActivity {
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot != null) {
                     mCity = documentSnapshot.getString("city");
-                    if(mCity == null) {
-                        MenuItem addReportButton = menu.findItem(R.id.addReportButton);
-                        addReportButton.setVisible(true);
+                    if(mCity != null) {
+                        mAddReportButton.setVisibility(View.INVISIBLE);
                     }
                 }
             }

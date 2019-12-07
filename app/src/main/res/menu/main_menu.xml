@@ -3,12 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/addReportButton"
-        android:icon="@drawable/ic_add_white_24dp"
-        android:title="@string/add_report"
-        android:visible="false"
-        app:showAsAction="always" />
-    <item
         android:id="@+id/settingsButton"
         android:title="@string/account_settings" />
     <item
