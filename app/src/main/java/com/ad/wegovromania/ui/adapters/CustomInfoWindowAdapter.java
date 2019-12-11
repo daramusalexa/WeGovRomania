@@ -59,7 +59,10 @@ public class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
         Report report = (Report) marker.getTag();
 
-        LatLng location = new LatLng(report.getLocation().getLatitude(), report.getLocation().getLongitude());
+        LatLng location = null;
+        if (report != null) {
+            location = new LatLng(report.getLocation().getLatitude(), report.getLocation().getLongitude());
+        }
         List<Address> addresses = Utils.getAdresses(location, context);
         String address = addresses.get(0).getAddressLine(0);
         mLocationTextView.setText(address);

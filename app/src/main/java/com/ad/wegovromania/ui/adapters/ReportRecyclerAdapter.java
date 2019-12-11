@@ -47,6 +47,7 @@ public class ReportRecyclerAdapter extends RecyclerView.Adapter<ReportRecyclerAd
     private TextView mReportBodyTextView;
     private TextView mDateTextView;
     private ImageView[] mImageViews;
+    private TextView mResolutionTextView;
 
     private List<Report> mReports;
     private List<String> mReportIDs;
@@ -80,11 +81,23 @@ public class ReportRecyclerAdapter extends RecyclerView.Adapter<ReportRecyclerAd
         String date = DateFormat.format("MM/dd/yyyy HH:mm", new Date(milliseconds)).toString();
         mDateTextView.setText(date);
 
+        // Load images into imageViews
+        int counter = 0;
         int i = 0;
         for (String string : mReports.get(position).getImages()) {
             Glide.with(holder.itemView.getContext()).load(string).into(mImageViews[i++]);
+            counter++;
         }
 
+        // Hide imageViews that don't have images
+        for(int j = 2; j > counter-1; j--) {
+            mImageViews[j].setVisibility(View.INVISIBLE);
+        }
+
+        String resolution = mReports.get(position).getResolution();
+        mResolutionTextView.setText(resolution);
+
+        // When user presses one of the report cards
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
@@ -118,6 +131,8 @@ public class ReportRecyclerAdapter extends RecyclerView.Adapter<ReportRecyclerAd
             mImageViews[0] = itemView.findViewById(R.id.imageView1);
             mImageViews[1] = itemView.findViewById(R.id.imageView2);
             mImageViews[2] = itemView.findViewById(R.id.imageView3);
+            mResolutionTextView = itemView.findViewById(R.id.resolutionTextView);
+
 
             // When user clicks on the Image Views
             for (final ImageView imageView : mImageViews) {
@@ -140,6 +155,7 @@ public class ReportRecyclerAdapter extends RecyclerView.Adapter<ReportRecyclerAd
         }
     }
 
+    // Refresh fragment when something changes in the Recycler view
     public void updateReports(List<Report> reports, List<String> reportIDs) {
         mReports = reports;
         mReportIDs = reportIDs;
