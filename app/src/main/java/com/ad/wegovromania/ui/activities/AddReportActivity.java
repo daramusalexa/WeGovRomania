@@ -108,7 +108,7 @@ public class AddReportActivity extends AppCompatActivity implements AdapterView.
         mSpinner = findViewById(R.id.spinner);
         mLocationTextView = findViewById(R.id.locationTextView);
         mAddLocationButton = findViewById(R.id.addLocationButton);
-        mReportBodyEditText = findViewById(R.id.reporttBodyEditText);
+        mReportBodyEditText = findViewById(R.id.reportBodyEditText);
         mReportBodyInputLayout = findViewById(R.id.reportBodyTextInputLayout);
         mImageViews = new ImageView[Constants.REPORT_IMAGEVIEWS_NUMBER];
         mImageViews[0] = findViewById(R.id.imageView1);

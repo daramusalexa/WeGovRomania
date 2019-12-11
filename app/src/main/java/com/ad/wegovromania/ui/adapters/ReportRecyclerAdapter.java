@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
@@ -29,12 +30,18 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Date;
 import java.util.List;
 
 public class ReportRecyclerAdapter extends RecyclerView.Adapter<ReportRecyclerAdapter.ViewHolder> {
+
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore mFirestore;
+    private FirebaseUser mFirebaseUser;
 
     private TextView mLocationTextView;
     private TextView mReportBodyTextView;
@@ -78,14 +85,16 @@ public class ReportRecyclerAdapter extends RecyclerView.Adapter<ReportRecyclerAd
             Glide.with(holder.itemView.getContext()).load(string).into(mImageViews[i++]);
         }
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View view) {
-               Intent intent = new Intent(holder.itemView.getContext(), ReportDetailsActivity.class);
-               intent.putExtra("REPORT_ID", mReportIDs.get(position));
-               holder.itemView.getContext().startActivity(intent);
+            public boolean onLongClick(View view) {
+                Intent intent = new Intent(holder.itemView.getContext(), ReportDetailsActivity.class);
+                intent.putExtra("REPORT_ID", mReportIDs.get(position));
+                holder.itemView.getContext().startActivity(intent);
+                return true;
             }
         });
+
     }
 
     @Override
@@ -97,6 +106,10 @@ public class ReportRecyclerAdapter extends RecyclerView.Adapter<ReportRecyclerAd
 
         public ViewHolder(@NonNull final View itemView) {
             super(itemView);
+
+            mAuth = FirebaseAuth.getInstance();
+            mFirestore = FirebaseFirestore.getInstance();
+            mFirebaseUser = mAuth.getCurrentUser();
 
             mLocationTextView = itemView.findViewById(R.id.locationTextView);
             mReportBodyTextView = itemView.findViewById(R.id.reportBodyTextView);

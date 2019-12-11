@@ -51,6 +51,19 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().setTitle(getString(R.string.app_name));
         }
 
+        // If user city is not null show Add Report Button
+        mFirestore.collection("Users").document(mFirebaseUser.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot != null) {
+                    mCity = documentSnapshot.getString("city");
+                    if(mCity == null) {
+                        mAddReportButton.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        });
+
         // When user clicks the Reports Button
         mReportsButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,9 +97,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
-
-        setUserCity(menu);
-
         return true;
     }
 
@@ -114,22 +124,6 @@ public class MainActivity extends AppCompatActivity {
     public void sendToLogin() {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
-    }
-
-    // If user city is not null show Add Report Button
-    public void setUserCity(final Menu menu) {
-        // Get user info from database
-        mFirestore.collection("Users").document(mFirebaseUser.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot != null) {
-                    mCity = documentSnapshot.getString("city");
-                    if(mCity != null) {
-                        mAddReportButton.setVisibility(View.INVISIBLE);
-                    }
-                }
-            }
-        });
     }
 }
 

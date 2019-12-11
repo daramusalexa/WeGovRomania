@@ -15,6 +15,7 @@ public class Report {
     private String reportBody;
     private ArrayList<String> images;
     private Constants.Status status;
+    private String resolution;
     private String userId;
     private @ServerTimestamp Date timestamp;
 
@@ -80,6 +81,14 @@ public class Report {
         this.status = status;
     }
 
+    public String getResolution() {
+        return resolution;
+    }
+
+    public void setResolution(String resolution) {
+        this.resolution = resolution;
+    }
+
     public String getUserId() {
         return userId;
     }
@@ -105,6 +114,7 @@ public class Report {
                 ", reportBody='" + reportBody + '\'' +
                 ", images=" + images +
                 ", status=" + status +
+                ", resolution='" + resolution + '\'' +
                 ", userId='" + userId + '\'' +
                 ", timestamp=" + timestamp +
                 '}';

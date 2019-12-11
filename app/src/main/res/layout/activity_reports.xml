@@ -24,6 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:contentDescription="@string/appbar_scrolling_view_behavior"
+        android:visibility="invisible"
         app:backgroundTint="@color/colorAccentLight"
         app:icon="@android:drawable/ic_input_add"
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"

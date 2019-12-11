@@ -73,6 +73,7 @@
     <string name="location_selection_failed">Selectare nereușită. Încercați din nou.</string>
 
     <!--    Report Details -->
+    <string name="resolution">Rezoluție</string>
     <string name="solved">Soluționat</string>
 
 </resources>

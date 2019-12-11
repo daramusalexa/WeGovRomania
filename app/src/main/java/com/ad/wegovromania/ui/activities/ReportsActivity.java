@@ -62,6 +62,19 @@ public class ReportsActivity extends AppCompatActivity implements ActiveReportsF
             getSupportActionBar().setTitle(getString(R.string.reports));
         }
 
+        // If user city is not null show Add Report Button
+        mFirestore.collection("Users").document(mFirebaseUser.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot != null) {
+                    mCity = documentSnapshot.getString("city");
+                    if(mCity == null) {
+                        mAddReportButton.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        });
+
         // When user clicks the Add Report Button
         mAddReportButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,22 +142,5 @@ public class ReportsActivity extends AppCompatActivity implements ActiveReportsF
     public void onFragmentInteraction(Uri uri) {
         //you can leave it empty
     }
-
-    // If user city is not null show Add Report Button
-    public void setUserCity(final Menu menu) {
-        // Get user info from database
-        mFirestore.collection("Users").document(mFirebaseUser.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot != null) {
-                    mCity = documentSnapshot.getString("city");
-                    if(mCity != null) {
-                        mAddReportButton.setVisibility(View.INVISIBLE);
-                    }
-                }
-            }
-        });
-    }
-
 }
 
