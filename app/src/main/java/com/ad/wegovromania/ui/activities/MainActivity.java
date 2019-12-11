@@ -26,9 +26,8 @@ public class MainActivity extends AppCompatActivity {
 
     private Toolbar mToolbar;
     private Button mReportsButton;
+    private Button mUsersButton;
     private Button mAddReportButton;
-
-    private static String mCity = null;
 
 
     @Override
@@ -42,8 +41,8 @@ public class MainActivity extends AppCompatActivity {
 
         mToolbar = findViewById(R.id.toolbar);
         mReportsButton = findViewById(R.id.reportsButton);
+        mUsersButton = findViewById(R.id.usersButton);
         mAddReportButton = findViewById(R.id.addReportButton);
-
 
         // Configure Toolbar
         setSupportActionBar(mToolbar);
@@ -51,16 +50,33 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().setTitle(getString(R.string.app_name));
         }
 
-        // If user city is not null show Add Report Button
+        // Get user info from database
         mFirestore.collection("Users").document(mFirebaseUser.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot != null) {
-                    mCity = documentSnapshot.getString("city");
-                    if(mCity == null) {
+                    // If user city is not null show Add Report Button
+                    String city = documentSnapshot.getString("city");
+                    if(city == null) {
                         mAddReportButton.setVisibility(View.VISIBLE);
                     }
+                    // If user is admin show Users Button
+                    if(documentSnapshot.getBoolean("admin") != null) {
+                        boolean isAdmin = documentSnapshot.getBoolean("admin");
+                        if (isAdmin) {
+                            mUsersButton.setVisibility(View.VISIBLE);
+                        }
+                    }
                 }
+            }
+        });
+
+        // When user clicks the Users Button
+        mUsersButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, UsersActivity.class);
+                startActivity(intent);
             }
         });
 

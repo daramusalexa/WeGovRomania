@@ -107,7 +107,7 @@ public class SolvedReportsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_active_reports, container, false);
+        View view = inflater.inflate(R.layout.fragment_solved_reports, container, false);
 
         mFirebaseUser = mAuth.getCurrentUser();
 

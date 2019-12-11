@@ -10,6 +10,9 @@
     <string name="cancel">Anulare</string>
     <string name="submit">Trimiteți</string>
 
+    <!-- Main-->
+    <string name="users">Utilizatori</string>
+
     <!--    Toolbar-->
     <string name="add_report">Sesizare nouă</string>
     <string name="reports">Sesizări</string>
