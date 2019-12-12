@@ -1,29 +1,28 @@
 package com.ad.wegovromania.ui.activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.ProgressBar;
+import android.widget.RadioGroup;
+import android.widget.Switch;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.ad.wegovromania.R;
-import com.ad.wegovromania.models.Report;
 import com.ad.wegovromania.models.User;
-import com.ad.wegovromania.ui.adapters.ReportRecyclerAdapter;
 import com.ad.wegovromania.ui.adapters.UserRecyclerAdapter;
-import com.ad.wegovromania.util.Constants;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -36,6 +35,7 @@ public class UsersActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
     private ProgressBar mProgressBar;
+    private Switch mEnabledSwitch;
     private RecyclerView mRecyclerView;
     private UserRecyclerAdapter mUserRecyclerAdapter;
     private List<User> mUsers;
@@ -54,6 +54,8 @@ public class UsersActivity extends AppCompatActivity {
         mFirestore = FirebaseFirestore.getInstance();
 
         mToolbar = findViewById(R.id.toolbar);
+        mEnabledSwitch = findViewById(R.id.enabledSwitch);
+        mEnabledSwitch.setChecked(true);
 
         mUsers = new ArrayList<>();
         mUserIDs = new ArrayList<>();
@@ -75,7 +77,20 @@ public class UsersActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mUserRecyclerAdapter);
 
         mProgressBar.setVisibility(View.VISIBLE);
-        loadUsers();
+        loadEnabledUsers();
+
+        mEnabledSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                // do something, the isChecked will be
+                // true if the switch is in the On position
+
+                if (mEnabledSwitch.isChecked()) {
+                    loadEnabledUsers();
+                } else {
+                    loadDisabledUsers();
+                }
+            }
+        });
     }
 
     // Inflate toolbar menu
@@ -106,19 +121,50 @@ public class UsersActivity extends AppCompatActivity {
         }
     }
 
-    // Load users from Firestore
-    public void loadUsers() {
-        mFirestore.collection("Users").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+    // Load enabled users from Firestore
+    public void loadEnabledUsers() {
+        mUsers = new ArrayList<>();
+        mUserIDs = new ArrayList<>();
+
+        mFirestore.collection("Users").whereEqualTo("enabled", true).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-
                 if (task.isSuccessful()) {
-                    // Load reports
+                    // Load users
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         mUsers = task.getResult().toObjects(User.class);
                         mUserIDs.add(document.getId());
                     }
-                    mUserRecyclerAdapter.updateReports(mUsers, mUserIDs);
+                    mUserRecyclerAdapter = new UserRecyclerAdapter(mUsers);
+                    mRecyclerView.setAdapter(mUserRecyclerAdapter);
+                    mUserRecyclerAdapter.updateUsers(mUsers, mUserIDs);
+                    mProgressBar.setVisibility(View.INVISIBLE);
+                } else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
+                }
+
+                Log.e(TAG, mUsers.toString());
+            }
+        });
+    }
+
+    // Load disabled users from Firestore
+    public void loadDisabledUsers() {
+        mUsers = new ArrayList<>();
+        mUserIDs = new ArrayList<>();
+
+        mFirestore.collection("Users").whereEqualTo("enabled", false).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    // Load users
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        mUsers = task.getResult().toObjects(User.class);
+                        mUserIDs.add(document.getId());
+                    }
+                    mUserRecyclerAdapter = new UserRecyclerAdapter(mUsers);
+                    mRecyclerView.setAdapter(mUserRecyclerAdapter);
+                    mUserRecyclerAdapter.updateUsers(mUsers, mUserIDs);
                     mProgressBar.setVisibility(View.INVISIBLE);
                 } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());

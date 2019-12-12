@@ -9,6 +9,7 @@ public class User {
     private String firstName;
     private String lastName;
     private String phone;
+    private boolean enabled;
     private @ServerTimestamp Date timestamp;
 
     public User() {
@@ -18,6 +19,7 @@ public class User {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
+        this.enabled = true;
     }
 
     public String getFirstName() {
@@ -44,6 +46,14 @@ public class User {
         this.phone = phone;
     }
 
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
     public Date getTimestamp() {
         return timestamp;
     }
@@ -54,6 +64,7 @@ public class User {
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", phone='" + phone + '\'' +
+                ", enabled=" + enabled +
                 ", timestamp=" + timestamp +
                 '}';
     }

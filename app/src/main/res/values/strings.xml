@@ -79,4 +79,7 @@
     <string name="resolution">Rezoluție</string>
     <string name="solved">Soluționat</string>
 
+    <!-- Users -->
+    <string name="enabled_users">Conturi active</string>
+
 </resources>
