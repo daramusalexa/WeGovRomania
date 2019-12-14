@@ -3,6 +3,7 @@ package com.ad.wegovromania.ui.activities;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.location.Address;
 import android.location.Location;
 import android.os.Bundle;
@@ -28,8 +29,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -96,6 +99,7 @@ public class GoogleMapsActivity extends AppCompatActivity
             public void onClick(View view) {
                 // Get the city clicked on
                 List<Address> addresses = Utils.getAdresses(mLocation, GoogleMapsActivity.this);
+                Log.e(TAG, addresses.toString());
                 String countryName = null;
                 String cityName = null;
                 if (addresses != null) {
@@ -158,6 +162,20 @@ public class GoogleMapsActivity extends AppCompatActivity
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
+        try {
+            // Customise the styling of the base map using a JSON object defined
+            // in a raw resource file.
+            boolean success = googleMap.setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(
+                            this, R.raw.map_style));
+
+            if (!success) {
+                Log.e(TAG, "Style parsing failed.");
+            }
+        } catch (Resources.NotFoundException e) {
+            Log.e(TAG, "Can't find style. Error: ", e);
+        }
 
         // Set a preference for minimum and maximum zoom.
         mMap.setMinZoomPreference(10);
@@ -224,7 +242,6 @@ public class GoogleMapsActivity extends AppCompatActivity
         mFirestore.collection("Reports").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         // Load reports
@@ -232,16 +249,27 @@ public class GoogleMapsActivity extends AppCompatActivity
                         // Display makers
                         GeoPoint geoPoint = document.getGeoPoint("location");
                         mLocation = new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude());
-                        Marker marker = mMap.addMarker(new MarkerOptions()
-                                .position(mLocation)
-                                .title("Sesizare"));
-
-                        CustomInfoWindowAdapter customInfoWindowAdapter = new CustomInfoWindowAdapter(GoogleMapsActivity.this);
-                        mMap.setInfoWindowAdapter(customInfoWindowAdapter);
 
                         Report report = new Report(geoPoint, document.getString("type"), document.getString("city"), document.getString("reportBody"), mAuth.getCurrentUser().getUid());
                         report.setTimestamp(document.getDate("timestamp"));
                         report.setImages((ArrayList<String>)document.get("images"));
+                        report.setStatus(Constants.Status.valueOf(document.getString("status")));
+
+                        Marker marker;
+                        if(report.getStatus() == Constants.Status.Pending) {
+                            marker = mMap.addMarker(new MarkerOptions()
+                                    .position(mLocation)
+                                    .title("Sesizare")
+                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                        } else {
+                            marker = mMap.addMarker(new MarkerOptions()
+                                    .position(mLocation)
+                                    .title("Sesizare")
+                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                        }
+
+                        CustomInfoWindowAdapter customInfoWindowAdapter = new CustomInfoWindowAdapter(GoogleMapsActivity.this);
+                        mMap.setInfoWindowAdapter(customInfoWindowAdapter);
                         marker.setTag(report);
                     }
                 } else {

@@ -58,35 +58,34 @@ public class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         mImageViews[2] = view.findViewById(R.id.imageView3);
 
         Report report = (Report) marker.getTag();
+        if(report != null) {
+            LatLng location = new LatLng(report.getLocation().getLatitude(), report.getLocation().getLongitude());
+            List<Address> addresses = Utils.getAdresses(location, context);
+            String address = addresses.get(0).getAddressLine(0);
+            mLocationTextView.setText(address);
 
-        LatLng location = null;
-        if (report != null) {
-            location = new LatLng(report.getLocation().getLatitude(), report.getLocation().getLongitude());
-        }
-        List<Address> addresses = Utils.getAdresses(location, context);
-        String address = addresses.get(0).getAddressLine(0);
-        mLocationTextView.setText(address);
+            mReportBodyTextView.setText(report.getReportBody());
+            long milliseconds = report.getTimestamp().getTime();
+            String date = DateFormat.format("MM/dd/yyyy HH:mm", new Date(milliseconds)).toString();
+            mDateTextView.setText(date);
 
-        mReportBodyTextView.setText(report.getReportBody());
-        long milliseconds = report.getTimestamp().getTime();
-        String date = DateFormat.format("MM/dd/yyyy HH:mm", new Date(milliseconds)).toString();
-        mDateTextView.setText(date);
-
-        int i = 0;
-        for (String string : report.getImages()) {
-            Picasso.get().load(string).into(mImageViews[i++], new Callback() {
-                @Override
-                public void onSuccess() {
-                    if (marker != null && marker.isInfoWindowShown()) {
-                        // Toggle the marker's infoWindow
-                        marker.hideInfoWindow();
-                        marker.showInfoWindow();
+            int i = 0;
+            for (String string : report.getImages()) {
+                Picasso.get().load(string).into(mImageViews[i++], new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        if (marker.isInfoWindowShown()) {
+                            // Toggle the marker's infoWindow
+                            marker.hideInfoWindow();
+                            marker.showInfoWindow();
+                        }
                     }
-                }
-                @Override
-                public void onError(Exception e) {
-                }
-            });
+
+                    @Override
+                    public void onError(Exception e) {
+                    }
+                });
+            }
         }
         return view;
     }

@@ -51,25 +51,27 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // Get user info from database
-        mFirestore.collection("Users").document(mFirebaseUser.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot != null) {
-                    // If user city is not null show Add Report Button
-                    String city = documentSnapshot.getString("city");
-                    if(city == null) {
-                        mAddReportButton.setVisibility(View.VISIBLE);
-                    }
-                    // If user is admin show Users Button
-                    if(documentSnapshot.getBoolean("admin") != null) {
-                        boolean admin = documentSnapshot.getBoolean("admin");
-                        if (admin) {
-                            mUsersButton.setVisibility(View.VISIBLE);
+        if(mFirebaseUser != null) {
+            mFirestore.collection("Users").document(mFirebaseUser.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    if (documentSnapshot != null) {
+                        // If user city is not null show Add Report Button
+                        String city = documentSnapshot.getString("city");
+                        if (city == null) {
+                            mAddReportButton.setVisibility(View.VISIBLE);
+                        }
+                        // If user is admin show Users Button
+                        if (documentSnapshot.getBoolean("admin") != null) {
+                            boolean admin = documentSnapshot.getBoolean("admin");
+                            if (admin) {
+                                mUsersButton.setVisibility(View.VISIBLE);
+                            }
                         }
                     }
                 }
-            }
-        });
+            });
+        }
 
         // When user clicks the Users Button
         mUsersButton.setOnClickListener(new View.OnClickListener() {
@@ -103,8 +105,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         // Check if user is not signed in
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser == null) {
+        if(mFirebaseUser == null) {
             sendToLogin();
         }
     }
