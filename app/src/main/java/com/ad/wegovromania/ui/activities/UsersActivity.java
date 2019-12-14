@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ad.wegovromania.R;
+import com.ad.wegovromania.models.CityUser;
 import com.ad.wegovromania.models.User;
 import com.ad.wegovromania.ui.adapters.UserRecyclerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -37,7 +38,7 @@ public class UsersActivity extends AppCompatActivity {
     private ProgressBar mProgressBar;
     private RecyclerView mRecyclerView;
     private UserRecyclerAdapter mUserRecyclerAdapter;
-    private List<User> mUsers;
+    private List<CityUser> mUsers;
     private List<String> mUserIDs;
 
     private Toolbar mToolbar;
@@ -117,7 +118,7 @@ public class UsersActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     // Load users
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                            mUsers = task.getResult().toObjects(User.class);
+                            mUsers = task.getResult().toObjects(CityUser.class);
                             mUserIDs.add(document.getId());
                     }
                     mUserRecyclerAdapter.updateUsers(mUsers, mUserIDs);
