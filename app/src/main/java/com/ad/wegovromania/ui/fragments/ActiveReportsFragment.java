@@ -45,6 +45,7 @@ public class ActiveReportsFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final String TAG = "Active Reports Frag.";
+    private static boolean mAdmin = false;
     private static String mCity = null;
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -122,7 +123,7 @@ public class ActiveReportsFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setUserCity();
+        setUserInfo();
     }
 
     @Override
@@ -143,12 +144,15 @@ public class ActiveReportsFragment extends Fragment {
     }
 
     // Set User City before loading reports
-    public void setUserCity() {
+    public void setUserInfo() {
         // Get user info from database
         mFirestore.collection("Users").document(mFirebaseUser.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot != null) {
+                    if (documentSnapshot.get(("admin")) != null) {
+                        mAdmin = documentSnapshot.getBoolean("admin");
+                    }
                     mCity = documentSnapshot.getString("city");
                     loadReports();
                 }
@@ -159,27 +163,50 @@ public class ActiveReportsFragment extends Fragment {
     // Load reports from Firestore
     public void loadReports() {
         mFirebaseUser = mAuth.getCurrentUser();
-        if(mCity == null) {
-        mFirestore.collection("Reports").whereEqualTo("userId", mFirebaseUser.getUid()).whereEqualTo("status", Constants.Status.Pending).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+        // If user is admin get all pending reports
+        if (mAdmin) {
+            mFirestore.collection("Reports").whereEqualTo("status", Constants.Status.Pending).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
-                if (task.isSuccessful()) {
-                    // Load reports
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        mReports = task.getResult().toObjects(Report.class);
-                        mReportIDs.add(document.getId());
+                    if (task.isSuccessful()) {
+                        // Load reports
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            mReports = task.getResult().toObjects(Report.class);
+                            mReportIDs.add(document.getId());
+                        }
+                        mReportRecyclerAdapter.updateReports(mReports, mReportIDs);
+                        mProgressBar.setVisibility(View.INVISIBLE);
+                    } else {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
                     }
-                    mReportRecyclerAdapter.updateReports(mReports, mReportIDs);
-                    mProgressBar.setVisibility(View.INVISIBLE);
-                } else {
-                    Log.d(TAG, "Error getting documents: ", task.getException());
-                }
 
-                Log.e(TAG, mReports.toString());
-            }
-        });
-    } else {
+                    Log.e(TAG, mReports.toString());
+                }
+            });
+        }
+        // If user is citizen get all pending reports
+        else if (mCity == null) {
+            mFirestore.collection("Reports").whereEqualTo("userId", mFirebaseUser.getUid()).whereEqualTo("status", Constants.Status.Pending).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                    if (task.isSuccessful()) {
+                        // Load reports
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            mReports = task.getResult().toObjects(Report.class);
+                            mReportIDs.add(document.getId());
+                        }
+                        mReportRecyclerAdapter.updateReports(mReports, mReportIDs);
+                        mProgressBar.setVisibility(View.INVISIBLE);
+                    } else {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
+                    }
+                    Log.e(TAG, mReports.toString());
+                }
+            });
+            // If user is city get all pending reports
+        } else {
             mFirestore.collection("Reports").whereEqualTo("city", mCity).whereEqualTo("status", Constants.Status.Pending).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -200,7 +227,7 @@ public class ActiveReportsFragment extends Fragment {
                 }
             });
         }
-        }
+    }
 
     /**
      * This interface must be implemented by activities that contain this

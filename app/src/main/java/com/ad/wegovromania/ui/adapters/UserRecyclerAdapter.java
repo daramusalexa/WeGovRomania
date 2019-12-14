@@ -50,7 +50,8 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
     @Override
     public void onBindViewHolder(@NonNull final UserRecyclerAdapter.ViewHolder holder, final int position) {
         String firstName = mUsers.get(position).getFirstName();
-        mFirsNameTextView.setText(firstName);
+        String lastName = mUsers.get(position).getLastName();
+        mFirsNameTextView.setText(String.format("%s %s", firstName, lastName));
 
         boolean enabled = mUsers.get(position).isEnabled();
         if(enabled) {
@@ -61,18 +62,7 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 // do something, the isChecked will be
                 // true if the switch is in the On position
-
-                if (mEnabledSwitch.isChecked()) {
-                    mUsers.get(position).setEnabled(false);
-                    enableUser(mUsers.get(position), mUserIDs.get(position));
-                    Log.e(TAG, mUsers.toString());
-                    Log.e(TAG, mUserIDs.toString());
-                } else {
-                    mUsers.get(position).setEnabled(true);
-                    disableUser(mUsers.get(position), mUserIDs.get(position));
-                    Log.e(TAG, mUsers.toString());
-                    Log.e(TAG, mUserIDs.toString());
-                }
+                setUser(mUsers.get(position), mUserIDs.get(position));
             }
         });
     }
@@ -91,49 +81,33 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
             mFirestore = FirebaseFirestore.getInstance();
             mFirebaseUser = mAuth.getCurrentUser();
 
-            mFirsNameTextView = itemView.findViewById(R.id.firsNameTextView);
+            mFirsNameTextView = itemView.findViewById(R.id.nameTextView);
             mEnabledSwitch = itemView.findViewById(R.id.enabledSwitch);
         }
     }
 
+    // Set enabled / disabled
+    public void setUser(User user, String userID) {
+        user.setEnabled(!user.isEnabled());
+        mFirestore.collection("Users").document(userID)
+                .set(user)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully written!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error writing document", e);
+                    }
+                });
+    }
     // Refresh fragment when something changes in the Recycler view
     public void updateUsers(List<User> users, List<String> userIDs) {
         mUsers = users;
         mUserIDs = userIDs;
         notifyDataSetChanged();
-    }
-
-    public void enableUser(User user, String userID) {
-        mFirestore.collection("Users").document(userID)
-                .set(user)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "DocumentSnapshot successfully written!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error writing document", e);
-                    }
-                });
-    }
-
-    public void disableUser(User user, String userID) {
-        mFirestore.collection("Users").document(userID)
-                .set(user)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "DocumentSnapshot successfully written!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error writing document", e);
-                    }
-                });
     }
 }

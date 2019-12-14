@@ -35,7 +35,6 @@ public class UsersActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
     private ProgressBar mProgressBar;
-    private Switch mEnabledSwitch;
     private RecyclerView mRecyclerView;
     private UserRecyclerAdapter mUserRecyclerAdapter;
     private List<User> mUsers;
@@ -54,8 +53,6 @@ public class UsersActivity extends AppCompatActivity {
         mFirestore = FirebaseFirestore.getInstance();
 
         mToolbar = findViewById(R.id.toolbar);
-        mEnabledSwitch = findViewById(R.id.enabledSwitch);
-        mEnabledSwitch.setChecked(true);
 
         mUsers = new ArrayList<>();
         mUserIDs = new ArrayList<>();
@@ -77,20 +74,8 @@ public class UsersActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mUserRecyclerAdapter);
 
         mProgressBar.setVisibility(View.VISIBLE);
-        loadEnabledUsers();
+        loadUsers();
 
-        mEnabledSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                // do something, the isChecked will be
-                // true if the switch is in the On position
-
-                if (mEnabledSwitch.isChecked()) {
-                    loadEnabledUsers();
-                } else {
-                    loadDisabledUsers();
-                }
-            }
-        });
     }
 
     // Inflate toolbar menu
@@ -122,54 +107,24 @@ public class UsersActivity extends AppCompatActivity {
     }
 
     // Load enabled users from Firestore
-    public void loadEnabledUsers() {
+    public void loadUsers() {
         mUsers = new ArrayList<>();
         mUserIDs = new ArrayList<>();
 
-        mFirestore.collection("Users").whereEqualTo("enabled", true).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        mFirestore.collection("Users").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     // Load users
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        mUsers = task.getResult().toObjects(User.class);
-                        mUserIDs.add(document.getId());
+                            mUsers = task.getResult().toObjects(User.class);
+                            mUserIDs.add(document.getId());
                     }
-                    mUserRecyclerAdapter = new UserRecyclerAdapter(mUsers);
-                    mRecyclerView.setAdapter(mUserRecyclerAdapter);
                     mUserRecyclerAdapter.updateUsers(mUsers, mUserIDs);
                     mProgressBar.setVisibility(View.INVISIBLE);
                 } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());
                 }
-
-                Log.e(TAG, mUsers.toString());
-            }
-        });
-    }
-
-    // Load disabled users from Firestore
-    public void loadDisabledUsers() {
-        mUsers = new ArrayList<>();
-        mUserIDs = new ArrayList<>();
-
-        mFirestore.collection("Users").whereEqualTo("enabled", false).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    // Load users
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        mUsers = task.getResult().toObjects(User.class);
-                        mUserIDs.add(document.getId());
-                    }
-                    mUserRecyclerAdapter = new UserRecyclerAdapter(mUsers);
-                    mRecyclerView.setAdapter(mUserRecyclerAdapter);
-                    mUserRecyclerAdapter.updateUsers(mUsers, mUserIDs);
-                    mProgressBar.setVisibility(View.INVISIBLE);
-                } else {
-                    Log.d(TAG, "Error getting documents: ", task.getException());
-                }
-
                 Log.e(TAG, mUsers.toString());
             }
         });
