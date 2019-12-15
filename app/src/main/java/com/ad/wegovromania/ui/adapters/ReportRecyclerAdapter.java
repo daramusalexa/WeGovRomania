@@ -9,14 +9,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ad.wegovromania.R;
@@ -27,8 +23,8 @@ import com.ad.wegovromania.util.Constants;
 import com.ad.wegovromania.util.Utils;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -43,6 +39,7 @@ public class ReportRecyclerAdapter extends RecyclerView.Adapter<ReportRecyclerAd
     private FirebaseFirestore mFirestore;
     private FirebaseUser mFirebaseUser;
 
+    private TextView mNameTextView;
     private TextView mLocationTextView;
     private TextView mReportBodyTextView;
     private TextView mDateTextView;
@@ -68,6 +65,9 @@ public class ReportRecyclerAdapter extends RecyclerView.Adapter<ReportRecyclerAd
     // Fill card with data from Firestore
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
+        // Load user name
+        fillUserName(mReports.get(position).getUserId());
+
         // Create LatLng from GeoPoint
         LatLng location = new LatLng(mReports.get(position).getLocation().getLatitude(), mReports.get(position).getLocation().getLongitude());
         List<Address> addresses = Utils.getAdresses(location, holder.itemView.getContext());
@@ -124,6 +124,7 @@ public class ReportRecyclerAdapter extends RecyclerView.Adapter<ReportRecyclerAd
             mFirestore = FirebaseFirestore.getInstance();
             mFirebaseUser = mAuth.getCurrentUser();
 
+            mNameTextView = itemView.findViewById(R.id.nameTextView);
             mLocationTextView = itemView.findViewById(R.id.locationTextView);
             mReportBodyTextView = itemView.findViewById(R.id.reportBodyTextView);
             mDateTextView = itemView.findViewById(R.id.dateTextView);
@@ -160,5 +161,28 @@ public class ReportRecyclerAdapter extends RecyclerView.Adapter<ReportRecyclerAd
         mReports = reports;
         mReportIDs = reportIDs;
         notifyDataSetChanged();
+    }
+
+    public void fillUserName(final String userId) {
+        mFirestore.collection("Users").document(userId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        // Show name if user is not the one who sent the report
+                        if(!userId.equals(mFirebaseUser.getUid())) {
+                            String firstName = document.getString("firstName");
+                            String lastName = document.getString("lastName");
+                            mNameTextView.setText(String.format("%s %s", firstName, lastName));
+                        }
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
     }
 }

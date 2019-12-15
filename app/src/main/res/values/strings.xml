@@ -45,6 +45,7 @@
     <string name="city_required_error">Completați localitatea</string>
     <string name="authentication_failed">Autentificare nereușită</string>
     <string name="registration_failed">Înregistrare nereușită</string>
+    <string name="account_not_enabled">Contul Dvs. nu este activat</string>
 
     <!--    Account Settings-->
     <string name="user_first_name">Nume</string>

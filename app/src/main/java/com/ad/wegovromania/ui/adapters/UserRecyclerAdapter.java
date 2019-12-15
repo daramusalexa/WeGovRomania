@@ -30,7 +30,7 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
     private FirebaseFirestore mFirestore;
     private FirebaseUser mFirebaseUser;
 
-    private TextView mFirsNameTextView;
+    private TextView mNameTextView;
     private TextView mCityTextView;
     private TextView mPhoneTextView;
     private TextView mRegisterDateTextView;
@@ -58,7 +58,7 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
         // Get user name
         String firstName = mUsers.get(position).getFirstName();
         String lastName = mUsers.get(position).getLastName();
-        mFirsNameTextView.setText(String.format("%s %s", firstName, lastName));
+        mNameTextView.setText(String.format("%s %s", firstName, lastName));
 
         // Get user city
         String city = mUsers.get(position).getCity();
@@ -104,7 +104,7 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
             mFirestore = FirebaseFirestore.getInstance();
             mFirebaseUser = mAuth.getCurrentUser();
 
-            mFirsNameTextView = itemView.findViewById(R.id.nameTextView);
+            mNameTextView = itemView.findViewById(R.id.nameTextView);
             mCityTextView = itemView.findViewById(R.id.cityTextView);
             mPhoneTextView = itemView.findViewById(R.id.phoneTextView);
             mRegisterDateTextView = itemView.findViewById(R.id.registerDateTextView);
