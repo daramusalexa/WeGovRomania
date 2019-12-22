@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ad.wegovromania.R;
 import com.ad.wegovromania.models.GovSystem;
+import com.ad.wegovromania.ui.activities.GovSystemDetailsActivity;
+import com.ad.wegovromania.ui.activities.ReportDetailsActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -76,6 +78,17 @@ public class GovSystemsRecyclerAdapter extends RecyclerView.Adapter<GovSystemsRe
                 Uri uri = Uri.parse(website); // missing 'http://' will cause crashed
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 holder.itemView.getContext().startActivity(intent);
+            }
+        });
+
+        // When user presses one of the Gov Systems cards
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                Intent intent = new Intent(holder.itemView.getContext(), GovSystemDetailsActivity.class);
+                intent.putExtra("GOV_SYSTEM_ID", mGovSystemsIDs.get(position));
+                holder.itemView.getContext().startActivity(intent);
+                return true;
             }
         });
     }

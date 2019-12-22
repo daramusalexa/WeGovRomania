@@ -85,8 +85,14 @@
     <!-- Users -->
     <string name="enabled_users">Conturi active</string>
 
-    <!--    Gov Systems-->
+    <!--    Gov Systems -->
     <string name="visit_website">Website</string>
     <string name="finished_loading_csv">Încărcare finalizată</string>
+
+    <!--    Gov Systems Details -->
+    <string name="email_subject">Subiect</string>
+    <string name="email_body">Conținut e-mail</string>
+    <string name="email_subject_required_error">Completați subiectul e-mail-ului</string>
+    <string name="email_body_required_error">Conținut conținutul e-mail-ului</string>
 
 </resources>

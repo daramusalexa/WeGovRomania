@@ -195,6 +195,7 @@ public class SettingsActivity extends AppCompatActivity {
                 mAuth.signOut();
                 Intent intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
+                finish();
                 return true;
             default:
                 return false;

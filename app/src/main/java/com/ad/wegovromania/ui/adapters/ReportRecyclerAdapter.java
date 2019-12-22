@@ -24,6 +24,7 @@ import com.ad.wegovromania.util.Utils;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -48,6 +49,9 @@ public class ReportRecyclerAdapter extends RecyclerView.Adapter<ReportRecyclerAd
 
     private List<Report> mReports;
     private List<String> mReportIDs;
+
+    private boolean mAdmin = false;
+    private boolean mCity = false;
 
     private static final String TAG = "Report Recycler Adapter";
 
@@ -97,17 +101,18 @@ public class ReportRecyclerAdapter extends RecyclerView.Adapter<ReportRecyclerAd
         String resolution = mReports.get(position).getResolution();
         mResolutionTextView.setText(resolution);
 
-        // When user presses one of the report cards
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                Intent intent = new Intent(holder.itemView.getContext(), ReportDetailsActivity.class);
-                intent.putExtra("REPORT_ID", mReportIDs.get(position));
-                holder.itemView.getContext().startActivity(intent);
-                return true;
-            }
-        });
-
+        if(mAdmin || mCity) {
+            // When user presses one of the Reports cards
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    Intent intent = new Intent(holder.itemView.getContext(), ReportDetailsActivity.class);
+                    intent.putExtra("REPORT_ID", mReportIDs.get(position));
+                    holder.itemView.getContext().startActivity(intent);
+                    return true;
+                }
+            });
+        }
     }
 
     @Override
@@ -133,6 +138,28 @@ public class ReportRecyclerAdapter extends RecyclerView.Adapter<ReportRecyclerAd
             mImageViews[1] = itemView.findViewById(R.id.imageView2);
             mImageViews[2] = itemView.findViewById(R.id.imageView3);
             mResolutionTextView = itemView.findViewById(R.id.resolutionTextView);
+
+            // Get user info from database
+            if (mFirebaseUser != null) {
+                mFirestore.collection("Users").document(mFirebaseUser.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot != null) {
+                            // If user city is not null show Add Report Button
+                            String city = documentSnapshot.getString("city");
+                            if (city != null) {
+                                mCity = true;
+                                notifyDataSetChanged();
+                            }
+                            // If user is admin show Users Button
+                            if (documentSnapshot.getBoolean("admin") != null) {
+                                mAdmin = documentSnapshot.getBoolean("admin");
+                                notifyDataSetChanged();
+                            }
+                        }
+                    }
+                });
+            }
 
 
             // When user clicks on the Image Views

@@ -28,7 +28,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class ReportDetailsActivity extends AppCompatActivity {
 
-    private static final String TAG = "Report Details Activity";
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
 
@@ -42,6 +41,8 @@ public class ReportDetailsActivity extends AppCompatActivity {
 
     private String mReportID;
     private Report mReport;
+
+    private static final String TAG = "Report Details Activity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,13 +143,14 @@ public class ReportDetailsActivity extends AppCompatActivity {
                 // Start the Login Activity
                 intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
+                finish();
                 return true;
             default:
                 return false;
         }
     }
 
-    // Load report from Firestore
+    // Load Report from Firestore
     public void loadReport() {
         mFirestore.collection("Reports").document(mReportID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
@@ -162,7 +164,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
         });
     }
 
-    // Modify report in Firestore
+    // Modify Report in Firestore
     public void modifyReport(final View view, String resolution) {
         mReport.setResolution(resolution);
         mFirestore.collection("Reports").document(mReportID).set(mReport).

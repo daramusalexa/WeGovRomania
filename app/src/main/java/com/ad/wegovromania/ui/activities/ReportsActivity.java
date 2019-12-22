@@ -126,6 +126,7 @@ public class ReportsActivity extends AppCompatActivity implements ActiveReportsF
                 mAuth.signOut();
                 intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
+                finish();
                 return true;
             default:
                 return false;

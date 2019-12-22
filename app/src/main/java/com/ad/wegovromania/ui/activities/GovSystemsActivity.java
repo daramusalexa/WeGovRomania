@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ad.wegovromania.R;
-import com.ad.wegovromania.models.CityUser;
 import com.ad.wegovromania.models.GovSystem;
 import com.ad.wegovromania.ui.adapters.GovSystemsRecyclerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -25,10 +24,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -101,6 +96,7 @@ public class GovSystemsActivity extends AppCompatActivity {
                 mAuth.signOut();
                 intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
+                finish();
                 return true;
             default:
                 return false;
