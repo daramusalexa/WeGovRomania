@@ -14,7 +14,7 @@ public class Report {
     private String city;
     private String reportBody;
     private ArrayList<String> images;
-    private Constants.Status status;
+    private Constants.ReportStatus status;
     private String resolution;
     private String userId;
     private @ServerTimestamp Date timestamp;
@@ -28,7 +28,7 @@ public class Report {
         this.type = type;
         this.city = city;
         this.reportBody = reportBody;
-        this.status = Constants.Status.Pending;
+        this.status = Constants.ReportStatus.Pending;
         this.userId = userId;
         this.images = new ArrayList<>();
     }
@@ -73,11 +73,11 @@ public class Report {
         this.images = images;
     }
 
-    public Constants.Status getStatus() {
+    public Constants.ReportStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Constants.Status status) {
+    public void setStatus(Constants.ReportStatus status) {
         this.status = status;
     }
 

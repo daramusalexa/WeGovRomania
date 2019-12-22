@@ -3,6 +3,7 @@ package com.ad.wegovromania.models;
 public class CityUser extends User {
     private String city;
 
+    // Necessary for deserializing objects sent from Firestore
     public CityUser() {
     }
 

@@ -12,6 +12,7 @@ public class User {
     private boolean enabled;
     private @ServerTimestamp Date timestamp;
 
+    // Necessary for deserializing objects sent from Firestore
     public User() {
     }
 

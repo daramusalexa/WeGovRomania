@@ -12,6 +12,8 @@
 
     <!-- Main-->
     <string name="users">Utilizatori</string>
+    <string name="gov_systems">Sisteme de e-guvernare</string>
+    <string name="load_gov_systems">Încărcare eGov</string>
 
     <!--    Toolbar-->
     <string name="add_report">Sesizare nouă</string>
@@ -82,5 +84,9 @@
 
     <!-- Users -->
     <string name="enabled_users">Conturi active</string>
+
+    <!--    Gov Systems-->
+    <string name="visit_website">Website</string>
+    <string name="finished_loading_csv">Încărcare finalizată</string>
 
 </resources>

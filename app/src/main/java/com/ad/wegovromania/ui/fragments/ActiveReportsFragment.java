@@ -165,7 +165,7 @@ public class ActiveReportsFragment extends Fragment {
         mFirebaseUser = mAuth.getCurrentUser();
         // If user is admin get all pending reports
         if (mAdmin) {
-            mFirestore.collection("Reports").whereEqualTo("status", Constants.Status.Pending).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            mFirestore.collection("Reports").whereEqualTo("status", Constants.ReportStatus.Pending).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
@@ -187,7 +187,7 @@ public class ActiveReportsFragment extends Fragment {
         }
         // If user is citizen get all pending reports
         else if (mCity == null) {
-            mFirestore.collection("Reports").whereEqualTo("userId", mFirebaseUser.getUid()).whereEqualTo("status", Constants.Status.Pending).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            mFirestore.collection("Reports").whereEqualTo("userId", mFirebaseUser.getUid()).whereEqualTo("status", Constants.ReportStatus.Pending).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
@@ -207,7 +207,7 @@ public class ActiveReportsFragment extends Fragment {
             });
             // If user is city get all pending reports
         } else {
-            mFirestore.collection("Reports").whereEqualTo("city", mCity).whereEqualTo("status", Constants.Status.Pending).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            mFirestore.collection("Reports").whereEqualTo("city", mCity).whereEqualTo("status", Constants.ReportStatus.Pending).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
 

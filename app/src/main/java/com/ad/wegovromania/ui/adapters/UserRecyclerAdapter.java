@@ -48,34 +48,31 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
     @NonNull
     @Override
     public UserRecyclerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.user_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.users_item, parent, false);
         return new UserRecyclerAdapter.ViewHolder(view);
     }
 
     // Fill card with data from Firestore
     @Override
     public void onBindViewHolder(@NonNull final UserRecyclerAdapter.ViewHolder holder, final int position) {
-        // Get user name
+        // Fill cards with data
         String firstName = mUsers.get(position).getFirstName();
         String lastName = mUsers.get(position).getLastName();
         mNameTextView.setText(String.format("%s %s", firstName, lastName));
 
-        // Get user city
         String city = mUsers.get(position).getCity();
         if(city != null) {
             mCityTextView.setText(city);
         }
 
-        // Get user phone
         String phone = mUsers.get(position).getPhone();
-        mPhoneTextView.setText(String.format("Telefon: %s", mUsers.get(position).getPhone()));
+        mPhoneTextView.setText(String.format("Telefon: %s", phone));
 
-        // Get user register date
         long milliseconds = mUsers.get(position).getTimestamp().getTime();
         String date = DateFormat.format("MM/dd/yyyy", new Date(milliseconds)).toString();
         mRegisterDateTextView.setText(String.format("Înregistrat: %s", date));
 
-        // Get if user enabled
+        // If user enabled
         boolean enabled = mUsers.get(position).isEnabled();
         if(enabled) {
             mEnabledSwitch.setChecked(true);
@@ -130,6 +127,7 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
                     }
                 });
     }
+
     // Refresh fragment when something changes in the Recycler view
     public void updateUsers(List<CityUser> users, List<String> userIDs) {
         mUsers = users;

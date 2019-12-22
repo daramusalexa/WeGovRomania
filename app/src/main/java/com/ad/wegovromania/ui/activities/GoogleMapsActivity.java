@@ -253,10 +253,10 @@ public class GoogleMapsActivity extends AppCompatActivity
                         Report report = new Report(geoPoint, document.getString("type"), document.getString("city"), document.getString("reportBody"), mAuth.getCurrentUser().getUid());
                         report.setTimestamp(document.getDate("timestamp"));
                         report.setImages((ArrayList<String>)document.get("images"));
-                        report.setStatus(Constants.Status.valueOf(document.getString("status")));
+                        report.setStatus(Constants.ReportStatus.valueOf(document.getString("status")));
 
                         Marker marker;
-                        if(report.getStatus() == Constants.Status.Pending) {
+                        if(report.getStatus() == Constants.ReportStatus.Pending) {
                             marker = mMap.addMarker(new MarkerOptions()
                                     .position(mLocation)
                                     .title("Sesizare")

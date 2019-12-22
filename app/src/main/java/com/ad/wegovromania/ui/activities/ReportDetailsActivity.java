@@ -19,16 +19,12 @@ import android.widget.Switch;
 import com.ad.wegovromania.R;
 import com.ad.wegovromania.models.Report;
 import com.ad.wegovromania.util.Constants;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 public class ReportDetailsActivity extends AppCompatActivity {
 
@@ -82,9 +78,9 @@ public class ReportDetailsActivity extends AppCompatActivity {
                 // true if the switch is in the On position
 
                 if (mStatusSwitch.isChecked()) {
-                    mReport.setStatus(Constants.Status.Solved);
+                    mReport.setStatus(Constants.ReportStatus.Solved);
                 } else {
-                    mReport.setStatus(Constants.Status.Pending);
+                    mReport.setStatus(Constants.ReportStatus.Pending);
                 }
             }
         });
@@ -158,7 +154,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 mReport = documentSnapshot.toObject(Report.class);
-                if (mReport.getStatus().equals(Constants.Status.Solved)) {
+                if (mReport.getStatus().equals(Constants.ReportStatus.Solved)) {
                     mStatusSwitch.setChecked(true);
                 }
                 mResolutionEditText.setText(mReport.getResolution());

@@ -6,10 +6,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.ProgressBar;
-import android.widget.RadioGroup;
-import android.widget.Switch;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,8 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ad.wegovromania.R;
 import com.ad.wegovromania.models.CityUser;
-import com.ad.wegovromania.models.User;
-import com.ad.wegovromania.ui.adapters.UserRecyclerAdapter;
+import com.ad.wegovromania.models.GovSystem;
+import com.ad.wegovromania.ui.adapters.GovSystemsRecyclerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,39 +25,44 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UsersActivity extends AppCompatActivity {
+public class GovSystemsActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
 
     private ProgressBar mProgressBar;
     private RecyclerView mRecyclerView;
-    private UserRecyclerAdapter mUserRecyclerAdapter;
-    private List<CityUser> mUsers;
-    private List<String> mUserIDs;
+    private GovSystemsRecyclerAdapter mGovSystemsRecyclerAdapter;
     private Toolbar mToolbar;
 
-    private static final String TAG = "Users Activity";
+    private List<GovSystem> mGovSystems;
+    private List<String> mGovSystemsIDs;
+
+    private static final String TAG = "Gov Systems Activity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_users);
+        setContentView(R.layout.activity_gov_systems);
 
         mAuth = FirebaseAuth.getInstance();
         mFirestore = FirebaseFirestore.getInstance();
 
-        mUsers = new ArrayList<>();
-        mUserIDs = new ArrayList<>();
+        mGovSystems = new ArrayList<>();
+        mGovSystemsIDs = new ArrayList<>();
 
         mToolbar = findViewById(R.id.toolbar);
         // Configure Toolbar
         setSupportActionBar(mToolbar);
         if(getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(getString(R.string.users));
+            getSupportActionBar().setTitle(getString(R.string.gov_systems));
         }
 
         mProgressBar = findViewById(R.id.progressBar);
@@ -69,13 +71,12 @@ public class UsersActivity extends AppCompatActivity {
         mRecyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mUserRecyclerAdapter = new UserRecyclerAdapter(mUsers);
+        mGovSystemsRecyclerAdapter = new GovSystemsRecyclerAdapter(mGovSystems);
         mRecyclerView.setLayoutManager(linearLayoutManager);
-        mRecyclerView.setAdapter(mUserRecyclerAdapter);
+        mRecyclerView.setAdapter(mGovSystemsRecyclerAdapter);
 
         mProgressBar.setVisibility(View.VISIBLE);
-        loadUsers();
-
+        loadGovSystems();
     }
 
     // Inflate toolbar menu
@@ -106,27 +107,28 @@ public class UsersActivity extends AppCompatActivity {
         }
     }
 
-    // Load users from Firestore
-    public void loadUsers() {
-        mUsers = new ArrayList<>();
-        mUserIDs = new ArrayList<>();
+    // Load Gov Systems from CSV File
+    public void loadGovSystems() {
+        mGovSystems = new ArrayList<>();
+        mGovSystemsIDs = new ArrayList<>();
 
-        mFirestore.collection("Users").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        mFirestore.collection("GovSystems").orderBy("name").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     // Load users
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                            mUsers = task.getResult().toObjects(CityUser.class);
-                            mUserIDs.add(document.getId());
+                        mGovSystems = task.getResult().toObjects(GovSystem.class);
+                        mGovSystemsIDs.add(document.getId());
                     }
-                    mUserRecyclerAdapter.updateUsers(mUsers, mUserIDs);
+                    mGovSystemsRecyclerAdapter.updateGovSystems(mGovSystems, mGovSystemsIDs);
                     mProgressBar.setVisibility(View.INVISIBLE);
                 } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());
                 }
-                Log.e(TAG, mUsers.toString());
+                Log.e(TAG, mGovSystems.toString());
             }
         });
+
     }
 }
