@@ -3,7 +3,12 @@ package com.ad.wegovromania.ui.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,12 +20,15 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import com.ad.wegovromania.R;
 import com.ad.wegovromania.models.Report;
 import com.ad.wegovromania.util.Constants;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -33,6 +41,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
 
     private Toolbar mToolbar;
     private ProgressBar mProgressBar;
+    private TextView mNameTextView;
     private TextInputLayout mResolutionTextInputLayout;
     private EditText mResolutionEditText;
     private Switch mStatusSwitch;
@@ -57,7 +66,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
             getSupportActionBar().setTitle(getString(R.string.reports));
         }
         mProgressBar = findViewById(R.id.progressBar);
-
+        mNameTextView = findViewById(R.id.nameTextView);
         mResolutionTextInputLayout = findViewById(R.id.resolutionTextInputLayout);
         mResolutionEditText = findViewById(R.id.resolutionEditText);
 
@@ -94,7 +103,6 @@ public class ReportDetailsActivity extends AppCompatActivity {
 
                 // Clear errors
                 mResolutionTextInputLayout.setError(null);
-
 
                 mProgressBar.setVisibility(View.VISIBLE);
 
@@ -160,12 +168,14 @@ public class ReportDetailsActivity extends AppCompatActivity {
                     mStatusSwitch.setChecked(true);
                 }
                 mResolutionEditText.setText(mReport.getResolution());
+                // Load user name
+                fillUserName(mReport.getUserId());
             }
         });
     }
 
     // Modify Report in Firestore
-    public void modifyReport(final View view, String resolution) {
+    public void modifyReport(final View view, final String resolution) {
         mReport.setResolution(resolution);
         mFirestore.collection("Reports").document(mReportID).set(mReport).
                 addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -183,5 +193,25 @@ public class ReportDetailsActivity extends AppCompatActivity {
                     }
                 });
         mProgressBar.setVisibility(View.INVISIBLE);
+    }
+
+    public void fillUserName(final String userId) {
+        mFirestore.collection("Users").document(userId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        String firstName = document.getString("firstName");
+                        String lastName = document.getString("lastName");
+                        mNameTextView.setText(String.format("%s %s", firstName, lastName));
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
     }
 }

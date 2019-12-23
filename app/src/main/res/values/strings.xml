@@ -12,6 +12,7 @@
 
     <!-- Main-->
     <string name="users">Utilizatori</string>
+    <string name="reports_map">Hartă sesizări</string>
     <string name="gov_systems">Sisteme de e-guvernare</string>
     <string name="load_gov_systems">Încărcare eGov</string>
 

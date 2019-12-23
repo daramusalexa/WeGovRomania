@@ -46,6 +46,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class GoogleMapsActivity extends AppCompatActivity
         implements GoogleMap.OnMyLocationButtonClickListener,
@@ -64,6 +65,7 @@ public class GoogleMapsActivity extends AppCompatActivity
     private Button mSubmitButton;
 
     private List<Report> mReports;
+    private Intent mIntent;
 
     private static final String TAG = "Google Maps Activity";
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
@@ -90,6 +92,12 @@ public class GoogleMapsActivity extends AppCompatActivity
         mLocation = null;
 
         mReports = new ArrayList<>();
+
+        mIntent = getIntent();
+        if(Objects.equals(mIntent.getStringExtra("TYPE"), "without add")) {
+            mSubmitButton.setVisibility(View.INVISIBLE);
+            mCenterMarker.setVisibility(View.INVISIBLE);
+        }
 
         loadReports();
 
@@ -190,30 +198,34 @@ public class GoogleMapsActivity extends AppCompatActivity
         enableLocation();
         centerCameraOnUser();
 
-        // Add center marker
-        mSelector = mMap.addMarker(new MarkerOptions()
-                .position(mMap.getCameraPosition().target).icon(Utils.toBitmap(GoogleMapsActivity.this, R.drawable.ic_pin))
-                .draggable(true));
+        if(!Objects.equals(mIntent.getStringExtra("TYPE"), "without add")) {
+            // Add center marker
+            mSelector = mMap.addMarker(new MarkerOptions()
+                    .position(mMap.getCameraPosition().target).icon(Utils.toBitmap(GoogleMapsActivity.this, R.drawable.ic_pin))
+                    .draggable(true));
 
-        // Hide center marker when moving
-        mMap.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
-            @Override
-            public void onCameraMoveStarted(int i) {
-                mCenterMarker.setVisibility(View.VISIBLE);
-                mSelector.setVisible(false);
-            }
-        });
+            // Hide center marker when moving
+            mMap.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
+                @Override
+                public void onCameraMoveStarted(int i) {
+                    mCenterMarker.setVisibility(View.VISIBLE);
+                    mSelector.setVisible(false);
+                }
+            });
 
-        // Get center coordinates
-        mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
-            @Override
-            public void onCameraIdle() {
-                mLocation = mMap.getCameraPosition().target;
-                mSelector.setVisible(true);
-                mSelector.setPosition(mMap.getCameraPosition().target);
-                mCenterMarker.setVisibility(View.INVISIBLE);
-            }
-        });
+            // Get center coordinates
+            mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+                @Override
+                public void onCameraIdle() {
+                    mLocation = mMap.getCameraPosition().target;
+                    mSelector.setVisible(true);
+                    mSelector.setPosition(mMap.getCameraPosition().target);
+                    mCenterMarker.setVisibility(View.INVISIBLE);
+                }
+            });
+        }
+
+
     }
 
     @Override

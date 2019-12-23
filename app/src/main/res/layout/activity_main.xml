@@ -40,6 +40,16 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
     <Button
+        android:id="@+id/reportsMapButton"
+        android:layout_width="114dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="32dp"
+        android:text="@string/reports_map"
+        app:layout_constraintEnd_toStartOf="@+id/govSystemsButton"
+        app:layout_constraintStart_toEndOf="@+id/reportsButton"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+    <Button
         android:id="@+id/govSystemsButton"
         android:layout_width="114dp"
         android:layout_height="45dp"

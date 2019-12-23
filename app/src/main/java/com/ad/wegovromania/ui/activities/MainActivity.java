@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar mToolbar;
     private ProgressBar mProgressBar;
     private Button mReportsButton;
+    private Button mReportsMapButton;
     private Button mGovSystemsButton;
     private Button mUsersButton;
     private Button mLoadGovSystemsButton;
@@ -61,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
         mToolbar = findViewById(R.id.toolbar);
         mProgressBar = findViewById(R.id.progressBar);
         mReportsButton = findViewById(R.id.reportsButton);
+        mReportsMapButton = findViewById(R.id.reportsMapButton);
         mGovSystemsButton = findViewById(R.id.govSystemsButton);
         mUsersButton = findViewById(R.id.usersButton);
         mLoadGovSystemsButton = findViewById(R.id.loadGovSystemsButton);
@@ -96,6 +98,16 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
+
+        // When user clicks the Reports Button
+        mReportsMapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, GoogleMapsActivity.class);
+                intent.putExtra("TYPE", "without add");
+                startActivity(intent);
+            }
+        });
 
         // When user clicks the Reports Button
         mReportsButton.setOnClickListener(new View.OnClickListener() {
