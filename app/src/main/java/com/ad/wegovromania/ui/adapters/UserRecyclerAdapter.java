@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ad.wegovromania.R;
 import com.ad.wegovromania.models.CityUser;
 import com.ad.wegovromania.models.User;
+import com.ad.wegovromania.util.Constants;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -76,6 +77,11 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
         boolean enabled = mUsers.get(position).isEnabled();
         if(enabled) {
             mEnabledSwitch.setChecked(true);
+        }
+
+        // If user is admin block enabled/disabled Button
+        if(mUserIDs.get(position).equals(Constants.ADMIN_ID)) {
+            mEnabledSwitch.setEnabled(false);
         }
 
         mEnabledSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

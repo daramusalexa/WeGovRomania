@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -114,7 +115,7 @@ public class LoginActivity extends AppCompatActivity {
                                                     if (document.exists()) {
                                                         // Check if user is enabled
                                                         boolean enabled = document.getBoolean("enabled");
-                                                        if(!enabled) {
+                                                        if (!enabled) {
                                                             Toast.makeText(getApplicationContext(), getString(R.string.account_not_enabled),
                                                                     Toast.LENGTH_SHORT).show();
                                                         } else {
@@ -131,26 +132,21 @@ public class LoginActivity extends AppCompatActivity {
                                             }
                                         });
                                     } else {
-                                        try
-                                        {
+                                        try {
                                             throw task.getException();
                                         }
                                         // If user enters wrong email.
-                                        catch (FirebaseAuthInvalidUserException invalidEmail)
-                                        {
+                                        catch (FirebaseAuthInvalidUserException invalidEmail) {
                                             mEmailTextInputLayout.setError(getString(R.string.email_unavailable_error));
                                             mEmailEditText.requestFocus();
                                             Log.d(TAG, "onComplete: invalid_email");
                                         }
                                         // if user enters wrong password.
-                                        catch (FirebaseAuthInvalidCredentialsException wrongPassword)
-                                        {
+                                        catch (FirebaseAuthInvalidCredentialsException wrongPassword) {
                                             mPasswordTextInputLayout.setError(getString(R.string.wrong_password_error));
                                             mPasswordEditText.requestFocus();
                                             Log.d(TAG, "onComplete: wrong_password");
-                                        }
-                                        catch (Exception e)
-                                        {
+                                        } catch (Exception e) {
                                             // Otherwise, display a message to the user.
                                             Toast.makeText(getApplicationContext(), getString(R.string.authentication_failed),
                                                     Toast.LENGTH_SHORT).show();
@@ -196,5 +192,14 @@ public class LoginActivity extends AppCompatActivity {
         }
         mPreferences.edit().putString(getString(R.string.user_email), email).apply();
         mPreferences.edit().putString(getString(R.string.user_password), password).apply();
+    }
+
+    // Don't let user go back
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+        }
+
+        return false;
     }
 }

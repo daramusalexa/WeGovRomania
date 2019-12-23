@@ -6,10 +6,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.ProgressBar;
-import android.widget.RadioGroup;
-import android.widget.Switch;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,8 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ad.wegovromania.R;
 import com.ad.wegovromania.models.CityUser;
-import com.ad.wegovromania.models.User;
 import com.ad.wegovromania.ui.adapters.UserRecyclerAdapter;
+import com.ad.wegovromania.util.Constants;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -59,7 +56,7 @@ public class UsersActivity extends AppCompatActivity {
         mToolbar = findViewById(R.id.toolbar);
         // Configure Toolbar
         setSupportActionBar(mToolbar);
-        if(getSupportActionBar() != null) {
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(getString(R.string.users));
         }
 
@@ -89,7 +86,7 @@ public class UsersActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         Intent intent;
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             // Start the Account Activity
             case R.id.settingsButton:
                 intent = new Intent(this, SettingsActivity.class);
@@ -117,8 +114,8 @@ public class UsersActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     // Load users
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                            mUsers = task.getResult().toObjects(CityUser.class);
-                            mUserIDs.add(document.getId());
+                        mUsers = task.getResult().toObjects(CityUser.class);
+                        mUserIDs.add(document.getId());
                     }
                     mUserRecyclerAdapter.updateUsers(mUsers, mUserIDs);
                     mProgressBar.setVisibility(View.INVISIBLE);
