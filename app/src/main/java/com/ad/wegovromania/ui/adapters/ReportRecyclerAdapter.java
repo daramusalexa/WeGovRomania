@@ -149,14 +149,13 @@ public class ReportRecyclerAdapter extends RecyclerView.Adapter<ReportRecyclerAd
                             }
                             // If user is admin show Users Button
                             if (documentSnapshot.getBoolean("admin") != null) {
-                                mAdmin = documentSnapshot.getBoolean("admin");
+                                mAdmin = true;
                                 notifyDataSetChanged();
                             }
                         }
                     }
                 });
             }
-
 
             // When user clicks on the Image Views
             for (final ImageView imageView : mImageViews) {

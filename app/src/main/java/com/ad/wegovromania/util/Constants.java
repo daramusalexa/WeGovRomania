@@ -8,7 +8,5 @@ public class Constants {
     public enum GovSystemsStatus {On, Off}
 
     public static int REPORT_IMAGEVIEWS_NUMBER = 3;
-
-    public static String ADMIN_ID = "qCLtVa8gFKdL5Y51X2N53dCFDW73";
 }
 

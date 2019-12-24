@@ -180,8 +180,8 @@ public class SolvedReportsFragment extends Fragment {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot != null) {
-                    if (documentSnapshot.get(("admin")) != null) {
-                        mAdmin = documentSnapshot.getBoolean("admin");
+                    if (documentSnapshot.getBoolean(("admin")) != null) {
+                        mAdmin = true;
                     }
                     mCity = documentSnapshot.getString("city");
                     loadReports();
@@ -210,8 +210,6 @@ public class SolvedReportsFragment extends Fragment {
                     } else {
                         Log.d(TAG, "Error getting documents: ", task.getException());
                     }
-
-                    Log.e(TAG, mReports.toString());
                 }
             });
         }
@@ -224,7 +222,7 @@ public class SolvedReportsFragment extends Fragment {
                     if (task.isSuccessful()) {
                         // Load reports
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            mReports = task.getResult().toObjects(Report.class);
+                            mReports.add(document.toObject(Report.class));
                             mReportIDs.add(document.getId());
                         }
                         mReportRecyclerAdapter.updateReports(mReports, mReportIDs);
@@ -232,8 +230,6 @@ public class SolvedReportsFragment extends Fragment {
                     } else {
                         Log.d(TAG, "Error getting documents: ", task.getException());
                     }
-
-                    Log.e(TAG, mReports.toString());
                 }
             });
             // If user is city get all pending reports
@@ -245,7 +241,7 @@ public class SolvedReportsFragment extends Fragment {
                     if (task.isSuccessful()) {
                         // Load reports
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            mReports = task.getResult().toObjects(Report.class);
+                            mReports.add(document.toObject(Report.class));
                             mReportIDs.add(document.getId());
                         }
                         mReportRecyclerAdapter.updateReports(mReports, mReportIDs);

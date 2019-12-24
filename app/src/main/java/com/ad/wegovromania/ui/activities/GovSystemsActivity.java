@@ -114,7 +114,7 @@ public class GovSystemsActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     // Load users
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        mGovSystems = task.getResult().toObjects(GovSystem.class);
+                        mGovSystems.add(document.toObject(GovSystem.class));
                         mGovSystemsIDs.add(document.getId());
                     }
                     mGovSystemsRecyclerAdapter.updateGovSystems(mGovSystems, mGovSystemsIDs);
@@ -122,7 +122,6 @@ public class GovSystemsActivity extends AppCompatActivity {
                 } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());
                 }
-                Log.e(TAG, mGovSystems.toString());
             }
         });
 

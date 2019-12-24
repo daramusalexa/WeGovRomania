@@ -113,7 +113,7 @@ public class ReportDetailsActivity extends AppCompatActivity {
 
                     mProgressBar.setVisibility(View.VISIBLE);
 
-                    modifyReport(view, resolution);
+                    modifyReport(resolution);
                 }
             }
         });
@@ -164,26 +164,30 @@ public class ReportDetailsActivity extends AppCompatActivity {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 mReport = documentSnapshot.toObject(Report.class);
-                if (mReport.getStatus().equals(Constants.ReportStatus.Solved)) {
+                if (mReport != null && mReport.getStatus().equals(Constants.ReportStatus.Solved)) {
                     mStatusSwitch.setChecked(true);
                 }
-                mResolutionEditText.setText(mReport.getResolution());
+                if (mReport != null) {
+                    mResolutionEditText.setText(mReport.getResolution());
+                }
                 // Load user name
-                fillUserName(mReport.getUserId());
+                if (mReport != null) {
+                    fillUserName(mReport.getUserId());
+                }
             }
         });
     }
 
     // Modify Report in Firestore
-    public void modifyReport(final View view, final String resolution) {
+    public void modifyReport(final String resolution) {
         mReport.setResolution(resolution);
         mFirestore.collection("Reports").document(mReportID).set(mReport).
                 addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, "DocumentSnapshot successfully written!");
-                        Intent intent = new Intent(view.getContext(), ReportsActivity.class);
-                        view.getContext().startActivity(intent);
+                        Intent intent = new Intent(getApplicationContext(), ReportsActivity.class);
+                        startActivity(intent);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -201,12 +205,14 @@ public class ReportDetailsActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        String firstName = document.getString("firstName");
-                        String lastName = document.getString("lastName");
-                        mNameTextView.setText(String.format("%s %s", firstName, lastName));
-                    } else {
-                        Log.d(TAG, "No such document");
+                    if (document != null) {
+                        if (document.exists()) {
+                            String firstName = document.getString("firstName");
+                            String lastName = document.getString("lastName");
+                            mNameTextView.setText(String.format("%s %s", firstName, lastName));
+                        } else {
+                            Log.d(TAG, "No such document");
+                        }
                     }
                 } else {
                     Log.d(TAG, "get failed with ", task.getException());

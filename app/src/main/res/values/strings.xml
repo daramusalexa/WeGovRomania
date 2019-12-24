@@ -88,6 +88,7 @@
 
     <!--    Gov Systems -->
     <string name="visit_website">Website</string>
+    <string name="send_email">Trimite e-mail</string>
     <string name="finished_loading_csv">Încărcare finalizată</string>
 
     <!--    Gov Systems Details -->
@@ -95,5 +96,8 @@
     <string name="email_body">Conținut e-mail</string>
     <string name="email_subject_required_error">Completați subiectul e-mail-ului</string>
     <string name="email_body_required_error">Conținut conținutul e-mail-ului</string>
+    <string name="email_client_error">Niciun client de e-mail instalat</string>
+    <string name="sending_email">Trimitere e-mail…</string>
+    <string name="functional">Funcțional</string>
 
 </resources>

@@ -112,19 +112,21 @@ public class LoginActivity extends AppCompatActivity {
                                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                                 if (task.isSuccessful()) {
                                                     DocumentSnapshot document = task.getResult();
-                                                    if (document.exists()) {
-                                                        // Check if user is enabled
-                                                        boolean enabled = document.getBoolean("enabled");
-                                                        if (!enabled) {
-                                                            Toast.makeText(getApplicationContext(), getString(R.string.account_not_enabled),
-                                                                    Toast.LENGTH_SHORT).show();
+                                                    if (document != null) {
+                                                        if (document.exists()) {
+                                                            // Check if user is enabled
+                                                            boolean enabled = document.getBoolean("enabled");
+                                                            if (!enabled) {
+                                                                Toast.makeText(getApplicationContext(), getString(R.string.account_not_enabled),
+                                                                        Toast.LENGTH_SHORT).show();
+                                                            } else {
+                                                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                                                startActivity(intent);
+                                                                finish();
+                                                            }
                                                         } else {
-                                                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                                                            startActivity(intent);
-                                                            finish();
+                                                            Log.d(TAG, "No such document");
                                                         }
-                                                    } else {
-                                                        Log.d(TAG, "No such document");
                                                     }
                                                 } else {
                                                     Log.d(TAG, "get failed with ", task.getException());

@@ -35,7 +35,7 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
     private TextView mCityTextView;
     private TextView mPhoneTextView;
     private TextView mRegisterDateTextView;
-    private Switch mEnabledSwitch;
+    private Switch mStatusSwitch;
 
     private List<CityUser> mUsers;
     private List<String> mUserIDs;
@@ -76,15 +76,10 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
         // If user enabled
         boolean enabled = mUsers.get(position).isEnabled();
         if(enabled) {
-            mEnabledSwitch.setChecked(true);
+            mStatusSwitch.setChecked(true);
         }
 
-        // If user is admin block enabled/disabled Button
-        if(mUserIDs.get(position).equals(Constants.ADMIN_ID)) {
-            mEnabledSwitch.setEnabled(false);
-        }
-
-        mEnabledSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        mStatusSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 // do something, the isChecked will be
                 // true if the switch is in the On position
@@ -111,7 +106,7 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
             mCityTextView = itemView.findViewById(R.id.cityTextView);
             mPhoneTextView = itemView.findViewById(R.id.phoneTextView);
             mRegisterDateTextView = itemView.findViewById(R.id.registerDateTextView);
-            mEnabledSwitch = itemView.findViewById(R.id.enabledSwitch);
+            mStatusSwitch = itemView.findViewById(R.id.statusSwitch);
         }
     }
 

@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ad.wegovromania.R;
 import com.ad.wegovromania.models.CityUser;
+import com.ad.wegovromania.models.User;
 import com.ad.wegovromania.ui.adapters.UserRecyclerAdapter;
 import com.ad.wegovromania.util.Constants;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -114,15 +115,16 @@ public class UsersActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     // Load users
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        mUsers = task.getResult().toObjects(CityUser.class);
-                        mUserIDs.add(document.getId());
+                        if (document.getBoolean("admin") == null) {
+                            mUsers.add(document.toObject(CityUser.class));
+                            mUserIDs.add(document.getId());
+                    }
                     }
                     mUserRecyclerAdapter.updateUsers(mUsers, mUserIDs);
                     mProgressBar.setVisibility(View.INVISIBLE);
                 } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());
                 }
-                Log.e(TAG, mUsers.toString());
             }
         });
     }

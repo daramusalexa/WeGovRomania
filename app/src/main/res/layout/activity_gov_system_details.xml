@@ -38,7 +38,7 @@
         android:hint="@string/email_subject"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/progressBar">
+        app:layout_constraintTop_toBottomOf="@+id/statusSwitch">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/emailSubjectEditText"
@@ -81,7 +81,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
         android:backgroundTint="@color/colorAccentLight"
         android:text="@string/submit"
@@ -96,11 +96,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:switchPadding="10dp"
-        android:text="@string/solved"
+        android:text="@string/functional"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/submitButton" />
+        app:layout_constraintTop_toBottomOf="@+id/progressBar" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/saveButton"
@@ -112,6 +113,7 @@
         android:backgroundTint="@color/colorAccent"
         android:text="@string/save"
         android:textColor="@android:color/white"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/cancelButton"
         app:layout_constraintHorizontal_bias="0.5"
@@ -127,6 +129,7 @@
         android:backgroundTint="@color/colorAccentLight"
         android:text="@string/cancel"
         android:textColor="@android:color/white"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

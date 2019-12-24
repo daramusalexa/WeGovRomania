@@ -288,6 +288,7 @@ public class AddReportActivity extends AppCompatActivity implements AdapterView.
     public void writeReportToFirebase(final GeoPoint location, final String reportBody) {
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
         // Create new report
+        assert firebaseUser != null;
         Report report = new Report(location, mType, mCity, reportBody, firebaseUser.getUid());
         report.setImages(images);
 
@@ -339,8 +340,6 @@ public class AddReportActivity extends AppCompatActivity implements AdapterView.
                             if(mCounter++ == mImageUris.size() - 1){
                                 writeReportToFirebase(location, reportBody);
                             }
-                        } else {
-                            // Handle failures TODO
                         }
                     }
                 });

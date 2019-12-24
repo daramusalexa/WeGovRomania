@@ -31,6 +31,8 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Objects;
+
 public class RegisterActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
@@ -67,7 +69,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         // Check if user selected city account type
         Intent intent = getIntent();
-        if(intent.getStringExtra("ACCOUNT_TYPE").equals("CITY")) {
+        if(Objects.equals(intent.getStringExtra("ACCOUNT_TYPE"), "CITY")) {
             mIsCity = true;
         }
 

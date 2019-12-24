@@ -87,11 +87,8 @@ public class MainActivity extends AppCompatActivity {
                         }
                         // If user is admin show Users Button
                         if (documentSnapshot.getBoolean("admin") != null) {
-                            boolean admin = documentSnapshot.getBoolean("admin");
-                            if (admin) {
-                                mUsersButton.setVisibility(View.VISIBLE);
-                                mLoadGovSystemsButton.setVisibility(View.VISIBLE);
-                            }
+                            mUsersButton.setVisibility(View.VISIBLE);
+                            mLoadGovSystemsButton.setVisibility(View.VISIBLE);
                         }
                     }
                 }
