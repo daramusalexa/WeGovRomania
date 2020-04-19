@@ -31,6 +31,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private Button mReportsButton;
     private Button mReportsMapButton;
     private Button mGovSystemsButton;
+    private Button mSettingsButton;
     private Button mUsersButton;
     private Button mLoadGovSystemsButton;
     private Button mAddReportButton;
@@ -64,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
         mReportsButton = findViewById(R.id.reportsButton);
         mReportsMapButton = findViewById(R.id.reportsMapButton);
         mGovSystemsButton = findViewById(R.id.govSystemsButton);
+        mSettingsButton = findViewById(R.id.settingsButton);
         mUsersButton = findViewById(R.id.usersButton);
         mLoadGovSystemsButton = findViewById(R.id.loadGovSystemsButton);
         mAddReportButton = findViewById(R.id.addReportButton);
@@ -115,11 +118,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // When user clicks the Load GovSystems Button
+        // When user clicks the GovSystems Button
         mGovSystemsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, GovSystemsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        // When user clicks the Settings Button
+        mSettingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivity(intent);
             }
         });
@@ -161,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
                             }
 
                             // Get Gov Systems data from csv to Firestore
-                            InputStreamReader inputStreamReader = new InputStreamReader(getResources().openRawResource(R.raw.gov_systems), Charset.forName("UTF-8"));
+                            InputStreamReader inputStreamReader = new InputStreamReader(getResources().openRawResource(R.raw.gov_systems), StandardCharsets.UTF_8);
                             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
                             try {
                                 GovSystem govSystem;

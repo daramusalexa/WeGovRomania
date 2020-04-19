@@ -75,16 +75,24 @@
     <string name="images_not_selected">Nu ați selectat nicio imagine.</string>
     <string name="report_sent">Sesizarea Dvs. a fost transmisă.</string>
 
+    <!--    Report card -->
+    <string name="location">Locație</string>
+    <string name="processing">În curs de soluționare.</string>
+
     <!--    Google Maps -->
     <string name="out_of_country_bounds">Locația aleasă nu aparține României.</string>
     <string name="location_selection_failed">Selectare nereușită. Încercați din nou.</string>
 
     <!--    Report Details -->
+    <string name="complainant">Petent</string>
     <string name="resolution">Rezoluție</string>
     <string name="solved">Soluționat</string>
 
     <!-- Users -->
     <string name="enabled_users">Conturi active</string>
+
+    <!-- User Details -->
+    <string name="register_date">Data înregistrării</string>
 
     <!--    Gov Systems -->
     <string name="visit_website">Website</string>

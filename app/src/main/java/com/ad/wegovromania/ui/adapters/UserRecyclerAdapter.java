@@ -67,11 +67,11 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
         }
 
         String phone = mUsers.get(position).getPhone();
-        mPhoneTextView.setText(String.format("Telefon: %s", phone));
+        mPhoneTextView.setText(phone);
 
         long milliseconds = mUsers.get(position).getTimestamp().getTime();
         String date = DateFormat.format("MM/dd/yyyy", new Date(milliseconds)).toString();
-        mRegisterDateTextView.setText(String.format("Înregistrat: %s", date));
+        mRegisterDateTextView.setText(date);
 
         // If user enabled
         boolean enabled = mUsers.get(position).isEnabled();

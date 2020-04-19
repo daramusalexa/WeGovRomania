@@ -240,7 +240,6 @@ public class GoogleMapsActivity extends AppCompatActivity
                     mMap.setMyLocationEnabled(true);
                     centerCameraOnUser();
                 } else {
-                    // permission denied! // TODO
                 }
             }
             // other 'case' lines to check for other
@@ -264,6 +263,7 @@ public class GoogleMapsActivity extends AppCompatActivity
                         Report report = new Report(geoPoint, document.getString("type"), document.getString("city"), document.getString("reportBody"), mAuth.getCurrentUser().getUid());
                         report.setTimestamp(document.getDate("timestamp"));
                         report.setImages((ArrayList<String>)document.get("images"));
+                        report.setResolution(document.getString("resolution"));
                         report.setStatus(Constants.ReportStatus.valueOf(document.getString("status")));
 
                         Marker marker;

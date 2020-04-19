@@ -153,7 +153,7 @@ public class GovSystemDetailsActivity extends AppCompatActivity {
 
                     Intent intent = new Intent(Intent.ACTION_SEND);
                     intent.setType("message/rfc822");
-                    intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"gavrilam16@gmail.com"}); // TODO
+                    intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"alexa.daramus@gmail.com"}); // TODO
                     intent.putExtra(Intent.EXTRA_SUBJECT, emailSubject);
                     intent.putExtra(Intent.EXTRA_TEXT, emailBody);
                     try {

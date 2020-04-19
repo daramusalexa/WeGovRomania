@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.Address;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
@@ -34,6 +35,8 @@ public class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
     private TextView mReportBodyTextView;
     private TextView mDateTextView;
     private ImageView[] mImageViews;
+    private TextView mResolutionTextView;
+    private TextView mResolutionTagTextView;
 
     public CustomInfoWindowAdapter(Context ctx) {
         context = ctx;
@@ -56,6 +59,8 @@ public class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         mImageViews[0] = view.findViewById(R.id.imageView1);
         mImageViews[1] = view.findViewById(R.id.imageView2);
         mImageViews[2] = view.findViewById(R.id.imageView3);
+        mResolutionTextView = view.findViewById(R.id.resolutionTextView);
+        mResolutionTagTextView = view.findViewById(R.id.resolutionTagTextView);
 
         Report report = (Report) marker.getTag();
         if(report != null) {
@@ -85,6 +90,13 @@ public class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
                     public void onError(Exception e) {
                     }
                 });
+            }
+
+            String resolution = report.getResolution();
+            mResolutionTextView.setText(resolution);
+            // Hide resolution tag if empty
+            if(TextUtils.isEmpty(resolution)) {
+                mResolutionTagTextView.setVisibility(View.GONE);
             }
         }
         return view;

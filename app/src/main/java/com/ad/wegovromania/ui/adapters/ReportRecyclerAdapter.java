@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.Address;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -45,6 +46,7 @@ public class ReportRecyclerAdapter extends RecyclerView.Adapter<ReportRecyclerAd
     private TextView mDateTextView;
     private ImageView[] mImageViews;
     private TextView mResolutionTextView;
+    private TextView mResolutionTagTextView;
 
     private List<Report> mReports;
     private List<String> mReportIDs;
@@ -97,6 +99,10 @@ public class ReportRecyclerAdapter extends RecyclerView.Adapter<ReportRecyclerAd
 
         String resolution = mReports.get(position).getResolution();
         mResolutionTextView.setText(resolution);
+        // Hide resolution tag if empty
+        if(TextUtils.isEmpty(resolution)) {
+            mResolutionTagTextView.setVisibility(View.GONE);
+        }
 
         if(mAdmin || mCity) {
             // When user presses one of the Reports cards
@@ -134,6 +140,7 @@ public class ReportRecyclerAdapter extends RecyclerView.Adapter<ReportRecyclerAd
             mImageViews[1] = itemView.findViewById(R.id.imageView2);
             mImageViews[2] = itemView.findViewById(R.id.imageView3);
             mResolutionTextView = itemView.findViewById(R.id.resolutionTextView);
+            mResolutionTagTextView = itemView.findViewById(R.id.resolutionTagTextView);
 
             // Get user info from database
             if (mFirebaseUser != null) {

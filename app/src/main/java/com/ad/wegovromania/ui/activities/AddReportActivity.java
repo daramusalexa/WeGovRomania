@@ -195,7 +195,7 @@ public class AddReportActivity extends AppCompatActivity implements AdapterView.
         mType = parent.getItemAtPosition(position).toString();
     }
     public void onNothingSelected(AdapterView<?> arg0) {
-        // TODO Auto-generated method stub
+
     }
 
     // After Google Maps Activity or Crop Image returns the location
