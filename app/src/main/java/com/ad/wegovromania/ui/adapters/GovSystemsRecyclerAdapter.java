@@ -7,8 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -33,8 +31,8 @@ public class GovSystemsRecyclerAdapter extends RecyclerView.Adapter<GovSystemsRe
     private FirebaseUser mFirebaseUser;
 
     private TextView mNameTextView;
-    private TextView mPhoneTextView;
-    private TextView mEmailTextView;
+    private TextView mDescriptionTextView;
+    private TextView mInstitutionTextView;
     private Button mWebsiteButton;
     private Button mSendEmailButton;
     private TextView mStatusTextView;
@@ -63,14 +61,19 @@ public class GovSystemsRecyclerAdapter extends RecyclerView.Adapter<GovSystemsRe
         String name = mGovSystems.get(position).getName();
         mNameTextView.setText(name);
 
-        String phone = mGovSystems.get(position).getPhone();
-        mPhoneTextView.setText(phone);
+        String description = mGovSystems.get(position).getDescription();
+        mDescriptionTextView.setText(description);
 
-        String email = mGovSystems.get(position).getEmail();
-        mEmailTextView.setText(email);
+        String institution = mGovSystems.get(position).getInstitution();
+        mInstitutionTextView.setText(institution);
 
         String status = String.valueOf(mGovSystems.get(position).getStatus());
         mStatusTextView.setText(status);
+        mStatusTextView.setTextColor(holder.itemView.getResources().getColor(R.color.colorDarkGreen));
+        if(status.equals(Constants.GovSystemsStatus.Nefuncțional.toString())) {
+            mStatusTextView.setTextColor(holder.itemView.getResources().getColor(R.color.colorDarkRed));
+        }
+
 
         final String website = mGovSystems.get(position).getWebsite();
         if (website == null || website.isEmpty()) {
@@ -138,8 +141,8 @@ public class GovSystemsRecyclerAdapter extends RecyclerView.Adapter<GovSystemsRe
             mFirebaseUser = mAuth.getCurrentUser();
 
             mNameTextView = itemView.findViewById(R.id.nameTextView);
-            mPhoneTextView = itemView.findViewById(R.id.phoneTextView);
-            mEmailTextView = itemView.findViewById(R.id.emailTextView);
+            mDescriptionTextView = itemView.findViewById(R.id.descriptionTextView);
+            mInstitutionTextView = itemView.findViewById(R.id.institutionTextView);
             mStatusTextView = itemView.findViewById(R.id.statusTextView);
 
             mWebsiteButton = itemView.findViewById(R.id.websiteButton);
@@ -156,7 +159,6 @@ public class GovSystemsRecyclerAdapter extends RecyclerView.Adapter<GovSystemsRe
                                 mAdmin = true;
                                 notifyDataSetChanged();
                             }
-
                         }
                     }
                 });

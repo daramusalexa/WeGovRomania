@@ -8,7 +8,8 @@ import java.util.Date;
 public class GovSystem {
 
     private String name;
-    private String phone;
+    private String description;
+    private String institution;
     private String email;
     private String website;
     private Constants.GovSystemsStatus status;
@@ -18,12 +19,13 @@ public class GovSystem {
     public GovSystem() {
     }
 
-    public GovSystem(String name, String phone, String email, String website) {
+    public GovSystem(String name, String description, String institution, String email, String website) {
         this.name = name;
-        this.phone = phone;
+        this.description = description;
+        this.institution = institution;
         this.email = email;
         this.website = website;
-        this.status = Constants.GovSystemsStatus.On;
+        this.status = Constants.GovSystemsStatus.Funcțional;
     }
 
     public String getName() {
@@ -34,12 +36,20 @@ public class GovSystem {
         this.name = name;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getDescription() {
+        return description;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getInstitution() {
+        return institution;
+    }
+
+    public void setInstitution(String institution) {
+        this.institution = institution;
     }
 
     public String getEmail() {
@@ -70,7 +80,8 @@ public class GovSystem {
     public String toString() {
         return "GovSystem{" +
                 "name='" + name + '\'' +
-                ", phone='" + phone + '\'' +
+                ", description='" + description + '\'' +
+                ", institution='" + institution + '\'' +
                 ", email='" + email + '\'' +
                 ", website='" + website + '\'' +
                 ", status=" + status +

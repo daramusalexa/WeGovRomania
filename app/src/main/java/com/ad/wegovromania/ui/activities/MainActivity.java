@@ -35,10 +35,10 @@ import java.nio.charset.StandardCharsets;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "Main Activity";
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
     private FirebaseUser mFirebaseUser;
-
     private Toolbar mToolbar;
     private ProgressBar mProgressBar;
     private Button mReportsButton;
@@ -48,9 +48,6 @@ public class MainActivity extends AppCompatActivity {
     private Button mUsersButton;
     private Button mLoadGovSystemsButton;
     private Button mAddReportButton;
-
-    private static final String TAG = "Main Activity";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -183,23 +180,21 @@ public class MainActivity extends AppCompatActivity {
                                     mProgressBar.setVisibility(View.VISIBLE);
                                     mLoadGovSystemsButton.setEnabled(false);
                                     String[] rowData = line.split(",");
-                                    if (rowData.length > 8) {
-                                        govSystem = new GovSystem(rowData[1], rowData[5], rowData[6], rowData[7]);
-                                        // Add report in the Reports collection
-                                        mFirestore.collection("GovSystems").document().set(govSystem)
-                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                    @Override
-                                                    public void onSuccess(Void aVoid) {
-                                                        Log.d(TAG, "DocumentSnapshot successfully written!");
-                                                    }
-                                                })
-                                                .addOnFailureListener(new OnFailureListener() {
-                                                    @Override
-                                                    public void onFailure(@NonNull Exception e) {
-                                                        Log.w(TAG, "Error writing document", e);
-                                                    }
-                                                });
-                                    }
+                                    govSystem = new GovSystem(rowData[0], rowData[1], rowData[2], rowData[4], rowData[3]);
+                                    // Add report in the Reports collection
+                                    mFirestore.collection("GovSystems").document().set(govSystem)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Log.d(TAG, "DocumentSnapshot successfully written!");
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.w(TAG, "Error writing document", e);
+                                                }
+                                            });
                                     mProgressBar.setVisibility(View.INVISIBLE);
                                     mLoadGovSystemsButton.setEnabled(true);
                                     Toast.makeText(getApplicationContext(), getString(R.string.finished_loading_csv),

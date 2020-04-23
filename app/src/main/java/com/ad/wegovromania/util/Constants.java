@@ -5,7 +5,7 @@ public class Constants {
 
     public enum ReportStatus {Pending, Solved}
 
-    public enum GovSystemsStatus {On, Off}
+    public enum GovSystemsStatus {Funcțional, Nefuncțional}
 
     public static int REPORT_IMAGEVIEWS_NUMBER = 3;
 }

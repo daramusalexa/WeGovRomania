@@ -105,9 +105,9 @@ public class GovSystemDetailsActivity extends AppCompatActivity {
                 // true if the switch is in the On position
 
                 if (mStatusSwitch.isChecked()) {
-                    mGovSystem.setStatus(Constants.GovSystemsStatus.On);
+                    mGovSystem.setStatus(Constants.GovSystemsStatus.Funcțional);
                 } else {
-                    mGovSystem.setStatus(Constants.GovSystemsStatus.Off);
+                    mGovSystem.setStatus(Constants.GovSystemsStatus.Nefuncțional);
                 }
             }
         });
@@ -153,7 +153,7 @@ public class GovSystemDetailsActivity extends AppCompatActivity {
 
                     Intent intent = new Intent(Intent.ACTION_SEND);
                     intent.setType("message/rfc822");
-                    intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"alexa.daramus@gmail.com"}); // TODO
+                    intent.putExtra(Intent.EXTRA_EMAIL, new String[]{mGovSystem.getEmail()}); // TODO
                     intent.putExtra(Intent.EXTRA_SUBJECT, emailSubject);
                     intent.putExtra(Intent.EXTRA_TEXT, emailBody);
                     try {
@@ -202,7 +202,7 @@ public class GovSystemDetailsActivity extends AppCompatActivity {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 mGovSystem = documentSnapshot.toObject(GovSystem.class);
-                if (mGovSystem != null && mGovSystem.getStatus().equals(Constants.GovSystemsStatus.On)) {
+                if (mGovSystem != null && mGovSystem.getStatus().equals(Constants.GovSystemsStatus.Funcțional)) {
                     mStatusSwitch.setChecked(true);
                 }
             }
