@@ -2,6 +2,7 @@ package com.ad.wegovromania.models;
 
 import com.ad.wegovromania.util.Constants;
 import com.google.firebase.firestore.ServerTimestamp;
+import com.google.firebase.firestore.GeoPoint;
 
 import java.util.Date;
 
@@ -10,6 +11,7 @@ public class GovSystem {
     private String name;
     private String description;
     private String institution;
+    private GeoPoint location;
     private String email;
     private String website;
     private Constants.GovSystemsStatus status;
@@ -19,10 +21,11 @@ public class GovSystem {
     public GovSystem() {
     }
 
-    public GovSystem(String name, String description, String institution, String email, String website) {
+    public GovSystem(String name, String description, String institution, GeoPoint location, String email, String website) {
         this.name = name;
         this.description = description;
         this.institution = institution;
+        this.location = location;
         this.email = email;
         this.website = website;
         this.status = Constants.GovSystemsStatus.Funcțional;
@@ -46,6 +49,14 @@ public class GovSystem {
 
     public String getInstitution() {
         return institution;
+    }
+
+    public GeoPoint getLocation() {
+        return location;
+    }
+
+    public void setLocation(GeoPoint location) {
+        this.location = location;
     }
 
     public void setInstitution(String institution) {
@@ -82,6 +93,7 @@ public class GovSystem {
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", institution='" + institution + '\'' +
+                ", location='" + location + '\'' +
                 ", email='" + email + '\'' +
                 ", website='" + website + '\'' +
                 ", status=" + status +

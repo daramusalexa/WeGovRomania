@@ -24,7 +24,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/LocationTagTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/locationTagTextView" />
 
     <TextView
         android:id="@+id/reportBodyTextView"
@@ -38,7 +38,7 @@
         app:layout_constraintTop_toBottomOf="@+id/reportBodyTagTextView" />
 
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/imageViewsLinearLayout"
         android:layout_width="288dp"
         android:layout_height="88dp"
         android:layout_marginStart="16dp"
@@ -91,13 +91,14 @@
         app:layout_constraintTop_toBottomOf="@+id/resolutionTagTextView" />
 
     <TextView
-        android:id="@+id/LocationTagTextView"
+        android:id="@+id/locationTagTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
         android:text="@string/location"
         android:textColor="@color/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.022"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dateTextView" />
 
@@ -121,6 +122,6 @@
         android:text="@string/resolution"
         android:textColor="@color/colorPrimary"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/imageViewsLinearLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

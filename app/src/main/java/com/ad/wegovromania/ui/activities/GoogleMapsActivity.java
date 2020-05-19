@@ -99,7 +99,10 @@ public class GoogleMapsActivity extends AppCompatActivity
             mCenterMarker.setVisibility(View.INVISIBLE);
         }
 
+        loadGovSysMarkers();
         loadReports();
+
+
 
         // When the user clicks the submit button
         mSubmitButton.setOnClickListener(new View.OnClickListener() {
@@ -225,7 +228,6 @@ public class GoogleMapsActivity extends AppCompatActivity
             });
         }
 
-
     }
 
     @Override
@@ -286,10 +288,33 @@ public class GoogleMapsActivity extends AppCompatActivity
                 } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());
                 }
-                Log.e(TAG, mReports.toString());
             }
         });
     }
+
+    // Load Gov Systems from Firestore and display markers on the map
+    public void loadGovSysMarkers() {
+        mFirestore.collection("GovSystems").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        // Display makers
+                        GeoPoint geoPoint = document.getGeoPoint("location");
+                        LatLng location = new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude());
+
+                         Marker marker = mMap.addMarker(new MarkerOptions()
+                                    .position(location)
+                                    .title(document.getString("institution"))
+                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+                    }
+                } else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
+                }
+            }
+        });
+    }
+
 
     // Functions that need to be implemented
     // but not necessary to do anything

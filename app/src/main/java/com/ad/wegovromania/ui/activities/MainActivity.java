@@ -24,6 +24,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -180,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
                                     mProgressBar.setVisibility(View.VISIBLE);
                                     mLoadGovSystemsButton.setEnabled(false);
                                     String[] rowData = line.split(",");
-                                    govSystem = new GovSystem(rowData[0], rowData[1], rowData[2], rowData[4], rowData[3]);
+                                    govSystem = new GovSystem(rowData[0], rowData[1], rowData[2], new GeoPoint(Double.parseDouble(rowData[5]), Double.parseDouble(rowData[6])), rowData[4], rowData[3]);
                                     // Add report in the Reports collection
                                     mFirestore.collection("GovSystems").document().set(govSystem)
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
