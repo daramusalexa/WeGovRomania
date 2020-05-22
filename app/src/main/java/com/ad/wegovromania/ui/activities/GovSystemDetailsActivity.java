@@ -117,6 +117,7 @@ public class GovSystemDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(final View view) {
                 modifyGovSystem();
+                finish();
             }
         });
 
