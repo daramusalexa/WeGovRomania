@@ -189,11 +189,17 @@ public class SettingsActivity extends AppCompatActivity {
     // When the user clicks a button in the toolbar menu
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        Intent intent;
         switch (item.getItemId()) {
+            // Go to MainActivity
+            case R.id.mainPageButton:
+                intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                return true;
             // Log out user
             case R.id.logoutButton:
                 mAuth.signOut();
-                Intent intent = new Intent(this, LoginActivity.class);
+                intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
                 finish();
                 return true;

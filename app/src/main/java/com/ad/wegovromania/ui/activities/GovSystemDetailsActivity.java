@@ -12,6 +12,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -45,6 +46,7 @@ public class GovSystemDetailsActivity extends AppCompatActivity {
     private EditText mEmailBodyEditText;
     private Button mSubmitButton;
 
+    private TextView mGovSystemTextView;
     private Switch mStatusSwitch;
     private Button mSaveButton;
     private Button mCancelButton;
@@ -75,6 +77,7 @@ public class GovSystemDetailsActivity extends AppCompatActivity {
         mEmailBodyEditText = findViewById(R.id.emailBodyEditText);
         mSubmitButton = findViewById(R.id.submitButton);
 
+        mGovSystemTextView = findViewById(R.id.govSystemTextView);
         mStatusSwitch = findViewById(R.id.statusSwitch);
         mSaveButton = findViewById(R.id.saveButton);
         mCancelButton = findViewById(R.id.cancelButton);
@@ -170,7 +173,7 @@ public class GovSystemDetailsActivity extends AppCompatActivity {
     // Inflate toolbar menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
+        getMenuInflater().inflate(R.menu.reports_menu, menu);
         return true;
     }
 
@@ -179,6 +182,11 @@ public class GovSystemDetailsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         Intent intent;
         switch (item.getItemId()) {
+            // Go to MainActivity
+            case R.id.mainPageButton:
+                intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                return true;
             // Start the Account Activity
             case R.id.settingsButton:
                 intent = new Intent(this, SettingsActivity.class);
@@ -203,6 +211,7 @@ public class GovSystemDetailsActivity extends AppCompatActivity {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 mGovSystem = documentSnapshot.toObject(GovSystem.class);
+                mGovSystemTextView.setText(mGovSystem.getName());
                 if (mGovSystem != null && mGovSystem.getStatus().equals(Constants.GovSystemsStatus.Funcțional)) {
                     mStatusSwitch.setChecked(true);
                 }

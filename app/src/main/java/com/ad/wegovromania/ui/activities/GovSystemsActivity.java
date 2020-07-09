@@ -77,7 +77,7 @@ public class GovSystemsActivity extends AppCompatActivity {
     // Inflate toolbar menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
+        getMenuInflater().inflate(R.menu.reports_menu, menu);
         return true;
     }
 
@@ -86,6 +86,11 @@ public class GovSystemsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         Intent intent;
         switch(item.getItemId()) {
+            // Go to MainActivity
+            case R.id.mainPageButton:
+                intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                return true;
             // Start the Account Activity
             case R.id.settingsButton:
                 intent = new Intent(this, SettingsActivity.class);
@@ -101,6 +106,13 @@ public class GovSystemsActivity extends AppCompatActivity {
             default:
                 return false;
         }
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
     // Load Gov Systems from CSV File

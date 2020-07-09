@@ -85,6 +85,10 @@ public class ReportRecyclerAdapter extends RecyclerView.Adapter<ReportRecyclerAd
         mDateTextView.setText(date);
 
         // Load images into imageViews
+        mImageViews[0].setImageResource(0);
+        mImageViews[1].setImageResource(0);
+        mImageViews[2].setImageResource(0);
+
         int counter = 0;
         int i = 0;
         for (String string : mReports.get(position).getImages()) {
@@ -94,7 +98,8 @@ public class ReportRecyclerAdapter extends RecyclerView.Adapter<ReportRecyclerAd
 
         // Hide imageViews that don't have images
         for(int j = 2; j > counter-1; j--) {
-            mImageViews[j].setVisibility(View.INVISIBLE);
+            //mImageViews[j].setVisibility(View.INVISIBLE);
+            mImageViews[j].setEnabled(false);
         }
 
         String resolution = mReports.get(position).getResolution();

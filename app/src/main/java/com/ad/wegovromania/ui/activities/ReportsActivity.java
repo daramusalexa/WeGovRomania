@@ -117,6 +117,11 @@ public class ReportsActivity extends AppCompatActivity implements ActiveReportsF
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         Intent intent;
         switch(item.getItemId()) {
+            // Go to MainActivity
+            case R.id.mainPageButton:
+                intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                return true;
             case R.id.settingsButton:
                 intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
@@ -131,6 +136,13 @@ public class ReportsActivity extends AppCompatActivity implements ActiveReportsF
             default:
                 return false;
         }
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
     private void setFragment(Fragment fragment) {

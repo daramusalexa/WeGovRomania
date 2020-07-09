@@ -303,9 +303,9 @@ public class GoogleMapsActivity extends AppCompatActivity
                         GeoPoint geoPoint = document.getGeoPoint("location");
                         LatLng location = new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude());
 
-                         Marker marker = mMap.addMarker(new MarkerOptions()
+                        mMap.addMarker(new MarkerOptions()
                                     .position(location)
-                                    .title(document.getString("institution"))
+                                    .title(document.getString("institution") + "\n" + document.getString("name"))
                                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
                     }
                 } else {

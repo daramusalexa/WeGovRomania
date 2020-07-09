@@ -3,6 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/mainPageButton"
+        android:title="@string/main_page" />
+    <item
         android:id="@+id/settingsButton"
         android:title="@string/account_settings" />
     <item

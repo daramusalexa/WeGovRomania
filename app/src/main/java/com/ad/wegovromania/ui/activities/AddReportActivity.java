@@ -240,6 +240,11 @@ public class AddReportActivity extends AppCompatActivity implements AdapterView.
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         Intent intent;
         switch (item.getItemId()) {
+            // Go to MainActivity
+            case R.id.mainPageButton:
+                intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                return true;
             // Start the Account Activity
             case R.id.settingsButton:
                 intent = new Intent(this, SettingsActivity.class);

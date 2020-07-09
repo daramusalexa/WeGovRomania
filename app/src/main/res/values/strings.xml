@@ -17,6 +17,7 @@
     <string name="load_gov_systems">Încărcare sisteme</string>
 
     <!--    Toolbar-->
+    <string name="main_page">Pagina principală</string>
     <string name="add_report">Sesizare nouă</string>
     <string name="reports">Sesizări</string>
     <string name="active_reports">Trimise</string>
